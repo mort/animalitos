@@ -25,24 +25,20 @@ class Animalito
   end
   
   def wander
-    unleash
-    #go_wandering
+    path = imagine_path(current_location.lat, current_location.lon)
   end
   
-  def go
+  
+  def imagine_path(lat = 40.4091123, lon = -3.6934069, step = 0.001 , n = 25)
     
-    step = 0.001 
-    lat =  40.4091123
-    lon =  -3.6934069
+    w = []
     
-    25.times do |i|
+    n.times do |i|
       lat = lat + step
       lon = lon + step
       
-      loc = Location.new(lat, lon)
+      w << Location.new(lat, lon)
       
-      move_to loc
-      sleep(1)
     end
   end
   
