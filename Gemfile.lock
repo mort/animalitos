@@ -1,0 +1,37 @@
+GIT
+  remote: https://github.com/davetroy/geohash.git
+  revision: 03d655d5bf92554a1bf0b77f40190425dca24d91
+  specs:
+    geohash (1.1.1)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    RedCloth (4.2.9)
+    activesupport (2.3.17)
+    csquares (0.1.0)
+      hoe (>= 1.8.0)
+      newgem (>= 1.2.1)
+    hoe (3.5.0)
+      rake (>= 0.8, < 11.0)
+    minitest-spec-context (0.0.3)
+    newgem (1.5.3)
+      RedCloth (>= 4.1.1)
+      activesupport (~> 2.3.4)
+      hoe (>= 2.4.0)
+      rubigen (>= 1.5.3)
+      syntax (>= 1.0.0)
+    rake (10.0.3)
+    redis (3.0.2)
+    rubigen (1.5.8)
+      activesupport (>= 2.3.5, < 3.2.0)
+    syntax (1.0.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  csquares (~> 0.1.0)
+  geohash!
+  minitest-spec-context
+  redis (~> 3.0.2)
