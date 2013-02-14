@@ -10,7 +10,7 @@ class Announcer
       $redis.publish(c, msg) 
     end
     
-    channels_for(sender, type, 'feed').each do |c|
+    channels_for(sender, type, 'timeline').each do |c|
       puts "#{msg}"
       
       $redis.zadd(c, Time.now.to_i, msg)
@@ -25,7 +25,7 @@ class Announcer
 
     channels = []
 
-    channels << [c, channel_type].join(':')
+    channels << [c, channel_type, 'global'].join(':')
     channels << [c, channel_type, type.to_s].join(":")
     channels << [c, channel_type, klass, sender.to_param].join(":")
     channels << [c, channel_type, klass, sender.to_param, type.to_s].join(":")
