@@ -34,7 +34,7 @@ class Animalito
     locations = dream_path
     journey = Journey.new(self, locations)
     journey.go
-    @journeys = journey
+    @journeys << journey
   end
   
   def unleash
