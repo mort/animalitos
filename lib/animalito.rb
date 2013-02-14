@@ -49,11 +49,3 @@ class Animalito
   end
   
 end
-
-
-
-
-
-
-
-
