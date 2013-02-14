@@ -34,7 +34,6 @@ class Animalito
     locations = dream_path
     journey = Journey.new(self, locations)
     journey.go
-    journey.finish
     @journeys = journey
   end
   
