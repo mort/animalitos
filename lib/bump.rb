@@ -3,23 +3,24 @@ class Bump
   
   
   def initialize(animalitos)
-    id = 
+    @id = SecureRandom.uuid
     @animalitos = animalitos
-    bumpers = @animalitos.map(&:to_param).join(', ')
     
-    @animalitos.each { |a| a.bumps << self }
-
     add_observer Announcer.new
+
+  end
+  
+  def crash
+    @animalitos.each { |a| a.bumps << self }
+    bumpers = @animalitos.map(&:to_param).join(', ')    
     
     changed
     
-    notify_observers(self, "#{bumpers} bumped their heads!", :bump)		
-    
-    
+    notify_observers(self, "#{bumpers} bumped their heads!", :bump)	
   end
   
   def to_param
-    'foo'
+    id
   end
   
 end
