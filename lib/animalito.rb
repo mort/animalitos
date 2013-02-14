@@ -25,10 +25,12 @@ class Animalito
     player
   end
   
-  def do_journey
+  def do_journey(pace = nil)
+    
+    # Just a note to remember to introduce pace at some point
 
     journey.start
-    journey.locations.each { |loc| @animalito.move_to(loc) }
+    journey.locations.each { |loc| move_to(loc) }
     journey.finish
     
     @journeys << journey
