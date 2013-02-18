@@ -2,8 +2,7 @@ class Animalito
   include Observable 
   include Movable
   
-  attr_accessor :leashed
-  attr_reader :player, :name, :paths, :bumps, :journeys
+  attr_reader :player, :name, :paths, :bumps, :journeys, :leashed
   
   def initialize
     @positions = []
@@ -11,8 +10,13 @@ class Animalito
     @bumps = []
     @paths = []
     @journeys = []
+    @leashed = nil
     
 		add_observer Announcer.new
+
+		changed
+		
+    notify_observers(self, "#{to_param} is born!", :birth)
     
   end
     
@@ -29,6 +33,8 @@ class Animalito
   
   def wander
 
+    raise "Don't pull on the leash!" if @leashed
+    
     locations = RouteMaker.new(Location.new(current_location.lat, current_location.lon)).compute    
     journey = Journey.new(self, locations)
     do_journey(journey)
