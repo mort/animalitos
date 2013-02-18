@@ -13,6 +13,11 @@ class Player
 		add_observer Announcer.new
 	end
 	
+	def hatch
+	  return if @bound
+    bond_with(Animalito.new)
+  end
+	
 	def bond_with(animalito)
 	  raise 'Already bonded' if @bound
 
