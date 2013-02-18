@@ -1,5 +1,7 @@
 class Journey
 
+  attr_reader :animalito, :locations, :created_at, :finished_at, :open, :id
+
   def initialize(animalito, locations)
     @animalito = animalito
     @locations = locations
@@ -24,7 +26,7 @@ class Journey
   end
   
   def to_param
-    id
+    @id
   end
 
 end

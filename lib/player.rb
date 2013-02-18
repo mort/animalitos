@@ -1,6 +1,6 @@
 class Player
   include Observable 
-  include Mobile
+  include Movable
 
 	attr_accessor :animalito, :name
 
@@ -31,7 +31,8 @@ class Player
   end
 	
 	def move_to(location)
-	  @animalito.move_to(current_location) 
+	  super
+	  @animalito.move_to(location) if @bound
   end
 	
 	def to_param

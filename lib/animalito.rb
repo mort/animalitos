@@ -1,6 +1,6 @@
 class Animalito
   include Observable 
-  include Mobile
+  include Movable
   
   attr_accessor :leashed
   attr_reader :player, :name, :paths, :bumps, :journeys
@@ -17,22 +17,31 @@ class Animalito
   end
     
   def bond_with(player)
+
     @player = player
     @leashed = true
     changed
     notify_observers(self, "#{to_param} is now bonded with #{player.to_param}", :bond)
     
     player
+
   end
   
   def wander
-    locations = RouteMaker.compute(Location.new(current_location.lat, current_location.lon))    
-    do_journey(Journey.new(self, locations))
+
+    locations = RouteMaker.new(Location.new(current_location.lat, current_location.lon)).compute    
+    journey = Journey.new(self, locations)
+    do_journey(journey)
+
+  end
+  
+  def last_journey
+    @journeys.last unless @journeys.empty?
   end
   
   def do_journey(journey, pace = nil)
     
-    # Just a note to remember to introduce pace at some point
+    #TODO: Introduce pace (km/h) at some point
     journey.go do 
       journey.locations.each { |loc| move_to(loc) }
     end

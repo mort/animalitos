@@ -23,12 +23,11 @@ class RouteMaker
     send("compute_#{strategy}")
   end
   
-  def compute_linear
+  def compute_linear(n = 25)
     
     lat = @start_location.lat
     lon = @start_location.lon
     
-    n = 25
     locations = []
     
     n.times do |i|

@@ -1,4 +1,4 @@
-module Mobile
+module Movable
   attr_reader :positions
   
   def move_to(location)

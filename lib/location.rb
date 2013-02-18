@@ -21,7 +21,10 @@ class Location
   end
   
   def add_occupant(occupant)
-    @occupants << occupant
+    # Only animalitos are relevant for now
+    return unless occupant.is_a?(Animalito)
+
+    @occupants << occupant 
     Bump.new(occupants).crash if (@occupants.size > 1)
     notify_observers(self, "#{to_param} has a new visitor #{occupant.to_param}", :new_occupant)		
   end

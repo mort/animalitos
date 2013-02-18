@@ -55,7 +55,6 @@ class TestPlayer < MiniTest::Unit::TestCase
 
 end 
  
- 
 class TestAnimalito < MiniTest::Unit::TestCase
   
   describe Animalito do
@@ -74,14 +73,14 @@ class TestAnimalito < MiniTest::Unit::TestCase
       @animalito.player.must_be_same_as p
     end
     
-    # it 'has to go with the player when bound' do
-    #   p = Player.new('mort')
-    #   l =  Location.new(40.4091123, -3.6934069999999997)
-    #   p.bond_with(@animalito)
-    # 
-    #   p.move_to(l)
-    #   @animalito.current_location.must_be_same_as l
-    # end
+    it 'has to go with the player when bound' do
+      p = Player.new('mort')
+      l =  Location.new(40.4091123, -3.6934069999999997)
+      p.bond_with(@animalito)
+    
+      p.move_to(l)
+      @animalito.current_location.must_be_same_as l
+    end
     
     context 'moving' do
       
@@ -99,15 +98,19 @@ class TestAnimalito < MiniTest::Unit::TestCase
       end
       
       it 'will bump' do
-        puts "____________"
         animalito2 = Animalito.new
         animalito2.enter_location(@animalito.current_location)
         @animalito.bumps.count.must_equal 1
         @animalito.bumps.first.must_be_instance_of Bump
-        puts "____________"
-        
       end
       
+      it 'will wander' do
+        @animalito.wander
+        @animalito.journeys.wont_be_empty
+        @animalito.last_journey.must_be_instance_of Journey
+        @animalito.last_journey.open.must_be :===, false
+      end 
+       
                   
     end
     
@@ -115,7 +118,6 @@ class TestAnimalito < MiniTest::Unit::TestCase
   end
   
 end
-
 
 class TestLocation < MiniTest::Unit::TestCase 
 
@@ -168,13 +170,66 @@ class TestRouteMaker < MiniTest::Unit::TestCase
       @rm.strategy.must_equal :linear
     end
     
-    it 'has to call the appropriate computing method for strategy' do
+    it 'has to call the default computing method for strategy' do
       @rm.compute
-      @rm.must_send 'compute_linear'
+      assert_send [@rm, :compute_linear]
     end
+  
+    it 'has to compute an array of locations (linear)' do
+      locations = @rm.compute
+      locations.must_be_instance_of Array
+      locations.size.must_be :>, 1
+      locations.first.must_be_instance_of Location
+      locations.last.must_be_instance_of Location
+    end
+    
+    
   
     
   end
   
   
+end
+
+class TestJourney < MiniTest::Unit::TestCase 
+  
+  describe Journey do
+    
+    before do
+      l1 = Location.new(40.4091123, -3.6934069999999997)
+      l2 = Location.new(40.4091200, -3.6934100000200002)
+
+      rm = RouteMaker.new(l1, l2)
+      @locations = rm.compute
+      @a = Animalito.new
+      
+      @j = Journey.new(@a, @locations)
+    end
+    
+    it 'has an animalito' do
+      @j.animalito.must_be_same_as @a
+    end
+  
+    it 'has locations' do
+      @j.locations.must_be_same_as @locations
+    end
+    
+    it 'can be started' do
+      @j.start 
+      @j.created_at.must_be_kind_of Time
+      @j.open.must_be :==, true
+    end
+    
+    it 'can be finished' do
+      @j.start
+      @j.finish 
+      @j.finished_at.must_be_kind_of Time
+      @j.open.must_be :==, false  
+    end
+    
+  
+    
+  end
+
+
 end

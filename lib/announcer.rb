@@ -4,15 +4,13 @@ class Announcer
   
   def update(sender, msg, type = :untyped)
 
-
+    # Pub/sub for realtime updates
     channels_for(sender, type, 'live').each do |c| 
-      puts "#{c}: #{msg}"
       $redis.publish(c, msg) 
     end
     
+    # Timestamped Sorted Sets for timelines
     channels_for(sender, type, 'timeline').each do |c|
-      puts "#{msg}"
-      
       $redis.zadd(c, Time.now.to_i, msg)
     end
       
