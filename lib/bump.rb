@@ -20,7 +20,7 @@ class Bump
   end
   
   def to_param
-    id
+    @id
   end
   
 end

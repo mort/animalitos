@@ -1,8 +1,12 @@
+require 'pry'
+
 require 'minitest/spec'
 require 'minitest/autorun' 
 require 'minitest-spec-context'
 
-require './animals.rb'
+require '../animals.rb'
+
+Dir[File.dirname(__FILE__) + '/*.rb'].each {|file| require file }
 
 class TestPlayer < MiniTest::Unit::TestCase
 
@@ -136,4 +140,41 @@ class TestLocation < MiniTest::Unit::TestCase
   
   end
 
+end
+
+class TestRouteMaker < MiniTest::Unit::TestCase  
+  
+  describe RouteMaker do
+  
+    before do
+      @l1 = Location.new(40.4091123, -3.6934069999999997)
+      @l2 = Location.new(40.4091200, -3.6934100000200002)
+
+      @rm = RouteMaker.new(@l1, @l2)
+    end
+    
+    it 'has to be valid' do
+      @rm.must_be_instance_of RouteMaker
+    end
+    
+    it 'has to have start/end locations' do
+      
+      @rm.start_location.must_be :===, @l1
+      @rm.end_location.must_be :===, @l2
+      
+    end
+  
+    it 'has a default strategy' do
+      @rm.strategy.must_equal :linear
+    end
+    
+    it 'has to call the appropriate computing method for strategy' do
+      @rm.compute
+      @rm.must_send 'compute_linear'
+    end
+  
+    
+  end
+  
+  
 end

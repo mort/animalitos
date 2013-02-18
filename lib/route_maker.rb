@@ -1,23 +1,29 @@
 class RouteMaker
   
-  def initialize(start_location, stop_location = nil, strategy = :linear, step = 0.0001 )
-
-    stop_location ||= start_location
+  STRATEGIES = [:linear]
   
-    raise 'Must supply a location' unless (start_location.is_a?(Location) and stop_location.is_a?(Location))
+  attr_reader :start_location, :end_location, :strategy, :step
+  
+  def initialize(start_location, end_location = nil, strategy = :linear, step = 0.0001)
 
+    end_location ||= start_location
+  
+    raise 'Must supply a location' unless (start_location.is_a?(Location) and end_location.is_a?(Location))
+    raise 'Unknown strategy' unless STRATEGIES.include?(strategy)
+    
     @start_location = start_location
-    @stop_location = stop_location  
+    @end_location = end_location  
     @strategy = strategy
     @step = step
     
+    
   end
 
-  def make
-    send("make_#{strategy}")
+  def compute
+    send("compute_#{strategy}")
   end
   
-  def make_linear
+  def compute_linear
     
     lat = @start_location.lat
     lon = @start_location.lon

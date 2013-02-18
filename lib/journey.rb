@@ -17,6 +17,12 @@ class Journey
     @open = false
   end
   
+  def go(&block) 
+    start
+    yield
+    finish
+  end
+  
   def to_param
     id
   end

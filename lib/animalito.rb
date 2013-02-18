@@ -25,21 +25,20 @@ class Animalito
     player
   end
   
-  def do_journey(pace = nil)
-    
-    # Just a note to remember to introduce pace at some point
-
-    journey.start
-    journey.locations.each { |loc| move_to(loc) }
-    journey.finish
-    
-    @journeys << journey
-    
+  def wander
+    locations = RouteMaker.compute(Location.new(current_location.lat, current_location.lon))    
+    do_journey(Journey.new(self, locations))
   end
   
-  def wander
-    locations = RouteMaker.make(Location.new(current_location.lat, current_location.lon))    
-    do_journey(Journey.new(self, locations))
+  def do_journey(journey, pace = nil)
+    
+    # Just a note to remember to introduce pace at some point
+    journey.go do 
+      journey.locations.each { |loc| move_to(loc) }
+    end
+  
+    @journeys << journey
+    
   end
   
   def unleash
