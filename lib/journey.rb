@@ -19,6 +19,10 @@ class Journey
     @open = false
   end
   
+  def distance
+    @locations.first.distance_to(@locations.last)
+  end
+  
   def go(&block) 
     start
     yield

@@ -45,11 +45,17 @@ class Animalito
     @journeys.last unless @journeys.empty?
   end
   
-  def do_journey(journey, pace = nil)
+  # Speed in km/h or nil for "instajourneys"
+  def do_journey(journey, speed = nil)
+    
+    interval = !speed.nil? ? ((journey.length / (speed.to_f / 3600.0)) / locations) : nil
     
     #TODO: Introduce pace (km/h) at some point
     journey.go do 
-      journey.locations.each { |loc| move_to(loc) }
+      journey.locations.each do |loc| 
+        move_to(loc) 
+        sleep(interval) unless interval.nil?
+      end
     end
   
     @journeys << journey

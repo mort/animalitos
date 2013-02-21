@@ -1,3 +1,18 @@
+
+module Expanded
+    
+    GOOGLE_API_KEY = 'AIzaSyCRHvR0X-DG2ef4tUl84j2lAPOKUG5-w1s'
+    
+    def gstreetview_url
+      "http://maps.googleapis.com/maps/api/streetview?size=400x400&location=#{@lat},#{@lon}&sensor=false&key=#{GOOGLE_API_KEY}"
+    end
+
+    def gmgeocoding_url
+      "http://maps.googleapis.com/maps/api/geocode/json?latlng=#{lat},#{lon}&sensor=false"
+    end
+  
+end
+
 class Location
   include Observable 
   include Expanded
@@ -32,19 +47,5 @@ class Location
   def to_param 
     geohash
   end
-  
-end
-
-module Expanded
-    
-    GOOGLE_API_KEY = 'AIzaSyCRHvR0X-DG2ef4tUl84j2lAPOKUG5-w1s'
-    
-    def gstreetview_url
-      "http://maps.googleapis.com/maps/api/streetview?size=400x400&location=#{@lat},#{@lon}&sensor=false&key=#{GOOGLE_API_KEY}"
-    end
-
-    def gmgeocoding_url
-      "http://maps.googleapis.com/maps/api/geocode/json?latlng=#{lat},#{lon}&sensor=false"
-    end
   
 end

@@ -37,7 +37,7 @@ class Player
 	
 	def move_to(location)
 	  super
-	  @animalito.move_to(location) if @bound
+	  @animalito.move_to(location) if @animalito.leashed
   end
 	
 	def to_param
