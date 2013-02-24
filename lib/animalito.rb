@@ -35,7 +35,8 @@ class Animalito
 
     raise "Don't pull on the leash!" if @leashed
     
-    locations = RouteMaker.new(Location.new(current_location.lat, current_location.lon)).compute    
+    route = Route.new(current_location)
+    locations = route.compute
     journey = Journey.new(self, locations)
     do_journey(journey)
 

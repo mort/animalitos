@@ -144,19 +144,19 @@ class TestLocation < MiniTest::Unit::TestCase
 
 end
 
-class TestRouteMaker < MiniTest::Unit::TestCase  
+class TestRoute < MiniTest::Unit::TestCase  
   
-  describe RouteMaker do
+  describe Route do
   
     before do
       @l1 = Location.new(40.4091123, -3.6934069999999997)
       @l2 = Location.new(40.4091200, -3.6934100000200002)
 
-      @rm = RouteMaker.new(@l1, @l2)
+      @rm = Route.new(@l1, @l2)
     end
     
     it 'has to be valid' do
-      @rm.must_be_instance_of RouteMaker
+      @rm.must_be_instance_of Route
     end
     
     it 'has to have start/end locations' do
@@ -199,7 +199,7 @@ class TestJourney < MiniTest::Unit::TestCase
       l1 = Location.new(40.4091123, -3.6934069999999997)
       l2 = Location.new(40.4091200, -3.6934100000200002)
 
-      rm = RouteMaker.new(l1, l2)
+      rm = Route.new(l1, l2)
       @locations = rm.compute
       @a = Animalito.new
       

@@ -16,6 +16,8 @@ end
 class Location
   include Observable 
   include Expanded
+  include Geocoder
+  
   
   attr_reader :lat, :lon, :csquare, :geohash, :occupants
   
@@ -30,7 +32,22 @@ class Location
 		
   end
   
-
+  def bounding_box(r = 1)
+    Geocoder::Calculations.bounding_box([@lat, @lon], r)
+  end
+  
+  def distance_to(l2)
+    Geocoder::Calculations.distance_between([@lat, @lon], [l2.lat, l2.lon])
+  end
+  
+  def slope(l2)
+    dLat = l2.lat - @lat
+    dLon = l2.lon - @lon
+    
+    dLat / dLon
+      
+  end
+  
   def add_occupant(occupant)
     # Only animalitos are relevant for now
     return unless occupant.is_a?(Animalito)

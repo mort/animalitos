@@ -13,10 +13,14 @@ GEM
     csquares (0.1.0)
       hoe (>= 1.8.0)
       newgem (>= 1.2.1)
+    geocoder (1.1.6)
+    geokit (1.6.5)
+      multi_json
     hoe (3.5.0)
       rake (>= 0.8, < 11.0)
     method_source (0.8.1)
     minitest-spec-context (0.0.3)
+    multi_json (1.6.1)
     newgem (1.5.3)
       RedCloth (>= 4.1.1)
       activesupport (~> 2.3.4)
@@ -29,6 +33,7 @@ GEM
       slop (~> 3.4)
     rake (10.0.3)
     redis (3.0.2)
+    rgeo (0.3.20)
     rubigen (1.5.8)
       activesupport (>= 2.3.5, < 3.2.0)
     slop (3.4.3)
@@ -40,8 +45,11 @@ PLATFORMS
 
 DEPENDENCIES
   csquares (~> 0.1.0)
+  geocoder (~> 1.1.6)
   geohash!
+  geokit (~> 1.6.5)
   minitest-spec-context
   pry (~> 0.9.12)
   redis (~> 3.0.2)
+  rgeo (~> 0.3.20)
   streams (~> 0.1.2)

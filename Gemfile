@@ -7,4 +7,9 @@ gem "streams", "~> 0.1.2"
 
 gem "pry", "~> 0.9.12"
 
+
+gem "geocoder", "~> 1.1.6"
+gem "geokit", "~> 1.6.5"
+gem "rgeo", "~> 0.3.20"
+
 gem 'minitest-spec-context'
