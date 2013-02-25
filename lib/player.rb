@@ -25,6 +25,9 @@ class Player
 		@animalito.bond_with(self)
 		@bound = true
 		
+		# Player should follow its animalito
+    #follow(@animalito)
+		
 		changed    
 		notify_observers self, "#{to_param} is now bonded with #{animalito.to_param}", :bond
 		
@@ -34,10 +37,20 @@ class Player
 	def unbond
 	  @animalito = nil
   end
+  
+  def checkin(venue)
+    
+    lat = venue.location.lat
+    lon = venue.location.lng
+    
+    move_to(Location.new(lat,lon), false)
+    @animalito.join_player_at(venue)
+    
+  end
 	
-	def move_to(location)
+	def move_to(location, with_animalito = false)
 	  super
-	  @animalito.move_to(location) if @animalito.leashed
+	  @animalito.move_to(location) if with_animalito && @animalito.leashed 
   end
 	
 	def to_param

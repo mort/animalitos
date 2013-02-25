@@ -183,6 +183,56 @@ class TestRoute < MiniTest::Unit::TestCase
       locations.last.must_be_instance_of Location
     end
     
+    it 'has to compute an array of locations (random bbox)' do
+      @rm.strategy = :random_in_bbox
+      locations = @rm.compute
+      locations.must_be_instance_of Array
+      locations.size.must_be :>, 1
+      locations.first.must_be_instance_of Location
+      locations.last.must_be_instance_of Location
+    end
+    
+    it 'has to compute an array of locations (clockwise bbox)' do
+      @rm.strategy = :clockwise_in_bbox
+      locations = @rm.compute
+      locations.must_be_instance_of Array
+      locations.size.must_be :>, 1
+      locations.first.must_be_instance_of Location
+      locations.last.must_be_instance_of Location
+    end
+    
+    it 'has to order elements of an array clockwise' do
+      # Testing the array extensions based on 
+      # http://stackoverflow.com/questions/2855189/sort-latitude-and-longitude-coordinates-into-clockwise-ordered-quadrilateral
+      
+      sorted = "Hamburg,Praha,Stuttgart,Paris,Bremen,Calais,Rotterdam,Amsterdam".split(',') 
+      ordered_points = []
+      
+      points = {
+          "Stuttgart" => [48.7771056, 9.1807688],
+          "Rotterdam" => [51.9226899, 4.4707867],
+          "Paris" => [48.8566667, 2.3509871],
+          "Hamburg" => [53.5538148, 9.9915752],
+          "Praha" => [50.0878114, 14.4204598],
+          "Amsterdam" => [52.3738007, 4.8909347],
+          "Bremen" => [53.074981, 8.807081],
+          "Calais" => [50.9580293, 1.8524129],
+      }
+      
+      
+      locations = points.values.map {|p| Location.new(p[0],p[1]) }
+      locations.sort_clockwise!
+                  
+      upper_coords = [locations.upperleft.lat, locations.upperleft.lon]       
+            
+      locations.each do |l|
+        ordered_points << points.key([l.lat,l.lon]) 
+      end
+      
+      upper_coords.must_equal points["Hamburg"]
+      ordered_points.must_equal sorted
+
+    end
     
   
     

@@ -13,24 +13,7 @@ module Expanded
   
 end
 
-class Location
-  include Observable 
-  include Expanded
-  include Geocoder
-  
-  
-  attr_reader :lat, :lon, :csquare, :geohash, :occupants
-  
-  def initialize(lat, lon)
-    @lat = lat
-    @lon = lon
-    @csquare = CSquare.new(@lat,@lon)
-    @geohash = GeoHash.encode(@lat,@lon)
-    @occupants = []
-
-    add_observer Announcer.new
-		
-  end
+module Geo 
   
   def bounding_box(r = 1)
     Geocoder::Calculations.bounding_box([@lat, @lon], r)
@@ -48,7 +31,55 @@ class Location
       
   end
   
+  def <=>(b, upper)
+    
+    return -1 if self == upper 
+    return 1 if b == upper
+      
+    m1 = upper.slope(self)
+    m2 = upper.slope(b)
+    
+    if m1 == m2
+      return (self.distance_to(upper) < b.distance_to(upper)) ? 1 : -1  
+    end
+    
+    return -1 if (m1 <= 0 && m2 > 0) 
+    
+    # If 'p1' is to the left of 'upper' and 'p2' is the the right.
+    return 1 if (m1 > 0 && m2 <= 0) 
+
+    # It seems that both slopes are either positive, or negative.
+    return (m1 > m2) ? -1 : 1
+  end
+  
+end
+
+class Location
+  include Observable 
+  include Expanded
+  include Geo
+  include Geocoder
+  
+  
+  attr_reader :lat, :lon, :csquare, :geohash, :occupants
+  
+  def initialize(lat, lon)
+    @lat = lat
+    @lon = lon
+    @csquare = CSquare.new(@lat,@lon)
+    @geohash = GeoHash.encode(@lat,@lon)
+    @occupants = []
+
+    add_observer Announcer.new
+		
+  end
+  
+  
   def add_occupant(occupant)
+    
+    # Ocuppants shall follow the location and nearby locations
+    # occupant.follow(self, :nearby => true)
+    
     # Only animalitos are relevant for now
     return unless occupant.is_a?(Animalito)
 

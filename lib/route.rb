@@ -3,13 +3,13 @@ class Route
   
   STRATEGIES = [:linear, :random_in_bbox, :clockwise_in_bbox]
   
-  attr_reader :start_location, :end_location, :strategy, :step, :id, :locations
+  attr_reader :start_location, :end_location, :step, :id, :locations
+  
+  attr_accessor :strategy
   
   def initialize(start_location, end_location = nil, strategy = :linear, step = 0.0001)
-
-    end_location ||= start_location
   
-    raise 'Must supply a location' unless (start_location.is_a?(Location) and end_location.is_a?(Location))
+    raise 'Must supply a location' unless (start_location.is_a?(Location))
     raise 'Unknown strategy' unless STRATEGIES.include?(strategy)
     
     @id = SecureRandom.uuid
@@ -21,11 +21,17 @@ class Route
     
   end
 
-  def compute(*args)
-    @locations = send("compute_#{strategy}", args)
+  def compute(options = {})
+    @locations = send("compute_#{strategy}", options)
+    @locations << @end_location if @end_location
+    @locations
   end
   
-  def compute_linear(points = 25)
+  def compute_linear(options = {})
+    
+    options[:points] ||= 25
+    
+    points = options[:points]
     
     lat = @start_location.lat
     lon = @start_location.lon
@@ -40,7 +46,7 @@ class Route
 
     end
     
-    n.times do |i|
+    points.times do |i|
       lat = lat - @step
       lon = lon - @step
 
@@ -52,7 +58,13 @@ class Route
     
   end
   
-  def compute_random_in_bbox(points = 25, radius = 5)
+  def compute_random_in_bbox(options = {})
+    
+    options[:points] ||= 25
+    options[:radius] ||= 5
+    
+    points = options[:points]
+    radius = options[:radius]
     
     lat = @start_location.lat
     lon = @start_location.lon
@@ -75,35 +87,11 @@ class Route
     
   end
   
-  def compute_clockwise_in_bbox(points = 25, radius = 5)
+  def compute_clockwise_in_bbox(options = {})
 
-    locations = compute_random_in_bbox(points, radius)
-    
-    upper = locations.upperleft
-    
-    locations.sort! do |a,b|
-      return 1 if a == upper 
-      return -1 if b == upper
-      
-      m1 = upper.slope(a)
-      m2 = upper.slope(b)
-      
-      if m1 == m2
-        return (a.distance_to(upper) < b.distance_to(upper)) ? 1 : -1  
-      end
-      
-      return -1 if (m1 <= 0 && m2 > 0) 
-      
-      # If 'p1' is to the left of 'upper' and 'p2' is the the right.
-      return 1 if (m1 > 0 && m2 <= 0) 
+    locations = compute_random_in_bbox(options)
+    locations.sort_clockwise!
 
-      # It seems that both slopes are either positive, or negative.
-      return (m1 > m2) ? -1 : 1
-      
-    end
-    
-    sorted_locations
-    
   end
   
 
@@ -138,6 +126,11 @@ class Array
     
     top
   
+  end
+  
+  def sort_clockwise! 
+    upper = self.upperleft
+    sort! { |a,b| a.send('<=>', b, upper) }
   end
 
 end

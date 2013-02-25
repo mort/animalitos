@@ -36,6 +36,7 @@ GEM
     rgeo (0.3.20)
     rubigen (1.5.8)
       activesupport (>= 2.3.5, < 3.2.0)
+    rufus-mnemo (1.2.3)
     slop (3.4.3)
     streams (0.1.2)
     syntax (1.0.0)
@@ -52,4 +53,5 @@ DEPENDENCIES
   pry (~> 0.9.12)
   redis (~> 3.0.2)
   rgeo (~> 0.3.20)
+  rufus-mnemo (~> 1.2.3)
   streams (~> 0.1.2)

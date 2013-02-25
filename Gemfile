@@ -4,9 +4,10 @@ gem "geohash", :git => 'https://github.com/davetroy/geohash.git'
 gem "redis", "~> 3.0.2"
 gem "csquares", "~> 0.1.0"
 gem "streams", "~> 0.1.2"
+gem "rufus-mnemo", "~> 1.2.3"
+
 
 gem "pry", "~> 0.9.12"
-
 
 gem "geocoder", "~> 1.1.6"
 gem "geokit", "~> 1.6.5"

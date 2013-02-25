@@ -5,6 +5,8 @@ require 'geohash'
 require 'csquares'
 require "redis"
 
+require 'rufus/mnemo'
+
 require 'rgeo'
 require 'geocoder'
 require 'geokit'

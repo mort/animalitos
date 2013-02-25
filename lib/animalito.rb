@@ -2,15 +2,22 @@ class Animalito
   include Observable 
   include Movable
   
-  attr_reader :player, :name, :paths, :bumps, :journeys, :leashed
+  attr_reader :player, :name, :paths, :bumps, :journeys, :leashed, :id, :likings
   
   def initialize
     @positions = []
-    @name = SecureRandom.uuid
+    @id = SecureRandom.uuid
+    @name = set_name
     @bumps = []
     @paths = []
     @journeys = []
     @leashed = nil
+    @created_at = Time.now
+    
+    @temperament = set_temperament
+    @likings = {}
+    
+    @happiness = 100
     
 		add_observer Announcer.new
 
@@ -24,11 +31,20 @@ class Animalito
 
     @player = player
     @leashed = true
+    
+    # Animalito should follow its player
+    #follow(@player)
+
     changed
     notify_observers(self, "#{to_param} is now bonded with #{player.to_param}", :bond)
     
     player
 
+  end
+  
+  def join_player_at(venue)
+    consider(venue.canonicalUrl)
+    move_to(Position.new(venue.location.lat, venue.location.lng))
   end
   
   def wander
@@ -47,20 +63,29 @@ class Animalito
   end
   
   # Speed in km/h or nil for "instajourneys"
-  def do_journey(journey, speed = nil)
+  def do_journey(journey, options = {})
+    speed = options[:speed]
+    roundtrip = options[:roundtrip]
     
-    interval = !speed.nil? ? ((journey.length / (speed.to_f / 3600.0)) / locations) : nil
-    
-    #TODO: Introduce pace (km/h) at some point
+    # Roundtrip
+    journey.locations << journey.locations.first if roundtrip
+
+    last_loc = nil
+
     journey.go do 
       journey.locations.each do |loc| 
+
+        # Natural time
+        sleep(set_pace(loc, last_loc, speed)) if speed && last_loc
         move_to(loc) 
-        sleep(interval) unless interval.nil?
+        
+        last_loc = loc
+        
       end
     end
   
-    @journeys << journey
     
+    @journeys << journey
   end
   
   def unleash
@@ -68,7 +93,59 @@ class Animalito
   end
   
   def to_param
-    name
+    id
   end
+  
+  def set_temperament
+    # TODO: Use something from the player as seed
+    prng = Random.new(@created_at.to_i)
+    
+    like = prng.rand(0.75)
+    dislike = prng.rand(like)
+    
+    {:like => prng.rand , :dislike => prng.rand}
+    
+  end
+  
+  def consider(thing)
+    
+    return @likings[thing] if @likings.has_key?(thing)
+    
+    p_like = rand
+    p_dislike = rand
+    
+    @likings[thing] = if p_like < @temperament[:like] 
+                  1
+                elsif p_dislike < @temperament[:dislike]
+                  -1
+                else
+                  0
+                end 
+    
+    
+  end
+  
+  def reconsider(thing)
+    @likings.delete(thing)
+    consider(thing)
+  end
+  
+  
+  private
+    
+  def set_pace(loc, last_loc, speed)
+    d = loc.distance_to(last_loc).to_i
+    p = d / (speed.to_f / 3600.0)
+    puts "Wasting #{p} seconds (#{(p/3600).to_f} hrs.) on going a distance of #{d}km at a speed of #{speed}/h"
+    p
+  end
+  
+  def set_name
+    i = Time.now.to_i
+    i = i*-1 if (i%2 > 0)
+    Rufus::Mnemo.from_integer(i)
+  end
+  
+
   
 end
