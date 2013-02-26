@@ -41,10 +41,10 @@ class Animalito
     player
 
   end
-  
-  def join_player_at(venue)
-    consider(venue.canonicalUrl)
-    move_to(Position.new(venue.location.lat, venue.location.lng))
+
+  def move_to(location, options = {}) 
+    super    
+    consider(options[:venue].canonicalUrl) if options[:venue]
   end
   
   def wander

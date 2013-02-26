@@ -1,12 +1,12 @@
 module Movable
   attr_reader :positions
   
-  def move_to(location)
+  def move_to(location, options = {})
     raise 'Supply a location' unless location.is_a?(Location)
     return false if (current_location && location === current_location)
     
     leave_current_location if current_location
-    enter_location(location) 
+    enter_location(location, options) 
   end
   
   def current_position
@@ -17,8 +17,8 @@ module Movable
     current_position.location unless current_position.nil?
   end
   
-  def enter_location(location)
-    positions << Position.new(location, self)
+  def enter_location(location, options)
+    positions << Position.new(location, self, options)
     changed
     notify_observers(self, "#{to_param} is now at #{location.lat}, #{location.lon}", :enter_location)	
     

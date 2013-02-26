@@ -43,14 +43,14 @@ class Player
     lat = venue.location.lat
     lon = venue.location.lng
     
-    move_to(Location.new(lat,lon), false)
-    @animalito.join_player_at(venue)
+    move_to(Location.new(lat,lon), {:with_animalito => false, :venue => venue})
+    @animalito.checkin(venue)
     
   end
 	
-	def move_to(location, with_animalito = false)
+	def move_to(location, options = {})
 	  super
-	  @animalito.move_to(location) if with_animalito && @animalito.leashed 
+	  @animalito.move_to(location, options) if options[:with_animalito] && @animalito.leashed 
   end
 	
 	def to_param
