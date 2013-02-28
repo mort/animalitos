@@ -2,6 +2,7 @@
 module Expanded
     
     GOOGLE_API_KEY = 'AIzaSyCRHvR0X-DG2ef4tUl84j2lAPOKUG5-w1s'
+    WEATHER_UNDERGROUND_KEY = '42903ef0aeba690e'
     
     def gstreetview_url
       "http://maps.googleapis.com/maps/api/streetview?size=400x400&location=#{@lat},#{@lon}&sensor=false&key=#{GOOGLE_API_KEY}"
@@ -10,6 +11,11 @@ module Expanded
     def gmgeocoding_url
       "http://maps.googleapis.com/maps/api/geocode/json?latlng=#{lat},#{lon}&sensor=false"
     end
+  
+    def weather_url
+      "http://api.wunderground.com/api/#{WEATHER_UNDERGROUND_KEY}/conditions/q/#{lat},#{lon}.json"
+    end
+  
   
 end
 
