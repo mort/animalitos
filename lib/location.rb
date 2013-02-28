@@ -60,12 +60,13 @@ class Location
   include Geo
   include Geocoder
   
-  
   attr_reader :lat, :lon, :csquare, :geohash, :occupants
   
   def initialize(lat, lon)
-    @lat = lat
-    @lon = lon
+    # Precision of 4 decimals ~= 11.1 meters
+    # http://en.wikipedia.org/wiki/Decimal_degrees
+    @lat = lat.precision
+    @lon = lon.precision
     @csquare = CSquare.new(@lat,@lon)
     @geohash = GeoHash.encode(@lat,@lon)
     @occupants = []
@@ -95,5 +96,14 @@ class Location
   def to_param 
     geohash
   end
+  
+end
+
+class Float 
+  
+  def precision(p = 4)
+    sprintf("%.#{p}f", self).to_f
+  end
+  
   
 end
