@@ -6,6 +6,7 @@ gem "csquares", "~> 0.1.0"
 gem "streams", "~> 0.1.2"
 gem "rufus-mnemo", "~> 1.2.3"
 
+gem "cartodb-rb-client", "~> 0.4.3"
 
 gem "pry", "~> 0.9.12"
 
