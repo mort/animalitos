@@ -73,7 +73,7 @@ class TestAnimalito < MiniTest::Unit::TestCase
       @animalito.player.must_be_same_as p
     end
     
-    it 'has to go with the player when bound' do
+    it 'has to go with the player when leashed' do
       p = Player.new('mort')
       l =  Location.new(40.4091123, -3.6934069999999997)
       p.bond_with(@animalito)
@@ -209,14 +209,14 @@ class TestRoute < MiniTest::Unit::TestCase
       ordered_points = []
       
       points = {
-          "Stuttgart" => [48.7771056, 9.1807688],
-          "Rotterdam" => [51.9226899, 4.4707867],
-          "Paris" => [48.8566667, 2.3509871],
-          "Hamburg" => [53.5538148, 9.9915752],
-          "Praha" => [50.0878114, 14.4204598],
-          "Amsterdam" => [52.3738007, 4.8909347],
-          "Bremen" => [53.074981, 8.807081],
-          "Calais" => [50.9580293, 1.8524129],
+          "Stuttgart" => [48.7771, 9.1807],
+          "Rotterdam" => [51.9226, 4.4707],
+          "Paris" => [48.8566, 2.3509],
+          "Hamburg" => [53.5538, 9.9915],
+          "Praha" => [50.0878, 14.4204],
+          "Amsterdam" => [52.3738, 4.8909],
+          "Bremen" => [53.0749, 8.8070],
+          "Calais" => [50.9580, 1.8524],
       }
       
       
