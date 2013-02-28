@@ -13,7 +13,7 @@ class Animalito
     @bumps = []
     @paths = []
     @journeys = []
-    @leashed = nil
+    @leash= nil
     @created_at = Time.now
 
     @temperament = set_temperament
@@ -33,7 +33,7 @@ class Animalito
   def bond_with(player)
 
     @player = player
-    @leashed = true
+    @leash= true
 
     # Animalito should follow its player
     #follow(@player)
@@ -94,13 +94,7 @@ class Animalito
     @journeys << journey
   end
 
-  def leash
-    @leashed = true
-  end
 
-  def unleash
-    @leashed = false
-  end
 
   def to_param
     id
