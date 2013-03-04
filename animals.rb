@@ -9,15 +9,16 @@ require 'rufus/mnemo'
 require 'cartodb-rb-client'
 
 require 'rgeo'
-require 'geocoder'
+#require 'geocoder'
 require 'geokit'
+
+require 'httparty'
 
 require 'observer'
 require 'securerandom'
 
 
-require File.dirname(__FILE__) + '/lib/movable.rb'
-require File.dirname(__FILE__) + '/lib/temperament.rb'
+%w(movable temperament feeder).each {|f| require File.dirname(__FILE__) + "/lib/#{f}.rb" }
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file }
 
 CartoDB::Init.start YAML.load_file(File.dirname(__FILE__)+'/config/cartodb.yml')

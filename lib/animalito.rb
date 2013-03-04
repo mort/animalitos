@@ -51,7 +51,8 @@ class Animalito
 
   def move_to(location, options = {})
     super
-    consider(options[:venue].canonicalUrl) if (options[:checkin] && options[:venue])
+    enjoy_venue(options[:venue]) if (options[:checkin] && options[:venue])
+    enjoy_weather if time_to_enjoy_the_weather_again?
   end
 
   def wander(options = {})
@@ -88,6 +89,7 @@ class Animalito
         # Natural time
         sleep(set_pace(loc, last_loc, speed)) if speed && last_loc
         move_to(loc)
+        puts "Journey through #{loc.formatted_address}"
 
         last_loc = loc
 

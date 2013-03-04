@@ -25,12 +25,16 @@ GEM
     geocoder (1.1.6)
     geokit (1.6.5)
       multi_json
+    httparty (0.10.2)
+      multi_json (~> 1.0)
+      multi_xml (>= 0.5.2)
     i18n (0.6.0)
     json (1.7.7)
     method_source (0.8.1)
     mime-types (1.21)
     minitest-spec-context (0.0.3)
     multi_json (1.6.1)
+    multi_xml (0.5.3)
     oauth (0.4.5)
     pg (0.13.2)
     pry (0.9.12)
@@ -56,6 +60,7 @@ DEPENDENCIES
   geocoder (~> 1.1.6)
   geohash!
   geokit (~> 1.6.5)
+  httparty (~> 0.10.2)
   minitest-spec-context
   pry (~> 0.9.12)
   redis (~> 3.0.2)
