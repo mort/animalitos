@@ -2,8 +2,9 @@ class Animalito
   include Observable
   include Movable
   include Temperament
+  include Feeder
 
-  attr_reader :player, :name, :paths, :bumps, :journeys,  :id, :temperament
+  attr_reader :player, :name, :paths, :bumps, :journeys,  :id, :temperament, :luma, :luma_values
   attr_accessor :leashed
 
   def initialize
@@ -13,14 +14,17 @@ class Animalito
     @bumps = []
     @paths = []
     @journeys = []
-    @leash= nil
+    @leashed = nil
     @created_at = Time.now
 
     @temperament = set_temperament
     @likings = {}
 
-    @happiness = 100
-
+    @joy = 100
+    @luma = 100
+    
+    @luma_values= {}
+    
 
     add_observer Announcer.new
 
@@ -33,7 +37,7 @@ class Animalito
   def bond_with(player)
 
     @player = player
-    @leash= true
+    @leashed = true
 
     # Animalito should follow its player
     #follow(@player)
@@ -94,14 +98,18 @@ class Animalito
     @journeys << journey
   end
 
+  def unleash
+    @leashed = false
+  end
 
 
   def to_param
     id
   end
-
-
-
+  
+  def tick
+    consume_luma
+  end
 
   private
 

@@ -1,4 +1,7 @@
 module Temperament
+  
+  JOY_LIMIT = 500
+  
   def set_temperament
     # TODO: Use something from the player as seed
     prng = Random.new(@created_at.to_i)
@@ -7,6 +10,16 @@ module Temperament
     dislike = prng.rand(like)
     
     {:like => prng.rand , :dislike => prng.rand}
+    
+  end
+  
+  def enjoy(uri, points = 10)
+
+    increment = consider(uri) * points
+    
+    new_joy = @joy + increment
+    
+    @joy = (new_joy < JOY_LIMIT) ? (new_joy > 0 ? new_joy : 0) : JOY_LIMIT
     
   end
   
