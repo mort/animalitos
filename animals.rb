@@ -13,9 +13,11 @@ require 'geocoder'
 require 'geokit'
 
 require 'httparty'
+require 'activitystreams'
 
 require 'observer'
 require 'securerandom'
+
 
 
 %w(movable temperament feeder).each {|f| require File.dirname(__FILE__) + "/lib/#{f}.rb" }

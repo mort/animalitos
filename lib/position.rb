@@ -12,8 +12,10 @@ class Position
     @location.add_occupant(actor)
 
 
-    CartoDB::Connection.insert_row 'animalitos_positions', :name => @actor.name, :lat => @location.lat, :lon => @location.lon, :description => @actor.class.to_s
+    #CartoDB::Connection.insert_row 'animalitos_positions', :name => @actor.name, :lat => @location.lat, :lon => @location.lon, :description => @actor.class.to_s
 
   end
+
+
 
 end

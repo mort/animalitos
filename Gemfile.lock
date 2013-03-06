@@ -10,6 +10,14 @@ GEM
     activesupport (3.2.12)
       i18n (~> 0.6)
       multi_json (~> 1.0)
+    activitystreams (0.0.4)
+      activesupport (>= 2.3)
+      addressable
+      attr_required (>= 0.0.5)
+      i18n
+      json (>= 1.4.3)
+    addressable (2.3.3)
+    attr_required (0.0.5)
     cartodb-rb-client (0.4.3)
       activesupport (>= 3.0.0)
       i18n (>= 0.5.0, <= 0.6.0)
@@ -59,6 +67,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activitystreams (~> 0.0.4)
   cartodb-rb-client (~> 0.4.3)
   csquares (~> 0.1.0)
   geocoder (~> 1.1.6)

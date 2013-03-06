@@ -68,15 +68,16 @@ class Location
   include Observable 
   include Expanded
   include Geo
-  #include Geocoder
+  include Geocoder
   
-  attr_reader :lat, :lon, :csquare, :geohash, :occupants
+  attr_reader :lat, :lon, :altitude, :csquare, :geohash, :occupants
   
-  def initialize(lat, lon)
+  def initialize(lat, lon, altitude = 100)
     # Precision of 4 decimals ~= 11.1 meters
     # http://en.wikipedia.org/wiki/Decimal_degrees
     @lat = lat.precision
     @lon = lon.precision
+    @altitude = altitude
     @csquare = CSquare.new(@lat,@lon)
     @geohash = GeoHash.encode(@lat,@lon)
     @occupants = []
@@ -84,6 +85,7 @@ class Location
     add_observer Announcer.new
 		
   end
+  
   
   
   def add_occupant(occupant)
@@ -106,6 +108,18 @@ class Location
   def to_param 
     geohash
   end
+  
+  def as_place
+    ActivityStreams::Object::Place.new(
+      :display_name => formatted_address,
+      :position => ActivityStreams::Object::Place::GeoLocation.new(
+        :latitude => @lat,
+        :longitude => @lon,
+        :altitude => 100
+      )
+    )
+  end
+  
   
 end
 

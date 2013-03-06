@@ -111,6 +111,14 @@ class Animalito
   def tick
     consume_luma
   end
+  
+  def as_actor
+    ActivityStreams::Object::Person.new(
+      :id => to_param,
+      :display_name => @name
+    )
+  end
+  
 
   private
 
