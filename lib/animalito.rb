@@ -89,7 +89,6 @@ class Animalito
         # Natural time
         sleep(set_pace(loc, last_loc, speed)) if speed && last_loc
         move_to(loc)
-        puts "Journey through #{loc.formatted_address}"
 
         last_loc = loc
 

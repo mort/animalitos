@@ -51,6 +51,9 @@ class TestPlayer < MiniTest::Unit::TestCase
      end
 
 
+
+
+
   end
 
 end 
@@ -110,6 +113,25 @@ class TestAnimalito < MiniTest::Unit::TestCase
         @animalito.last_journey.must_be_instance_of Journey
         @animalito.last_journey.open.must_be :===, false
       end 
+      
+      it 'will go back to the player after wandering if roundtrip specified' do
+        player = Player.new('wadus')
+        player.bond_with(@animalito)
+        player.move_to(@l)
+        @animalito.leashed = false
+        @animalito.wander(:journey => {:roundtrip => true})
+        @animalito.current_location.must_equal @animalito.player.current_location
+      end
+      
+      it 'wont go back to the player after wandering if no roundtrip specified' do
+        player = Player.new('wadus')
+        player.bond_with(@animalito)
+        player.move_to(@l)
+        @animalito.leashed = false
+        @animalito.wander(:journey => {:roundtrip => false})
+        @animalito.current_location.wont_equal @animalito.player.current_location
+      end
+      
        
                   
     end
@@ -166,10 +188,6 @@ class TestRoute < MiniTest::Unit::TestCase
       
     end
   
-    it 'has a default strategy' do
-      @rm.strategy.must_equal :linear
-    end
-    
     it 'has to call the default computing method for strategy' do
       @rm.compute
       assert_send [@rm, :compute_linear]
@@ -184,8 +202,8 @@ class TestRoute < MiniTest::Unit::TestCase
     end
     
     it 'has to compute an array of locations (random bbox)' do
-      @rm.strategy = :random_in_bbox
-      locations = @rm.compute
+      strategy = :random_in_bbox
+      locations = @rm.compute(:strategy => strategy)
       locations.must_be_instance_of Array
       locations.size.must_be :>, 1
       locations.first.must_be_instance_of Location
@@ -193,8 +211,8 @@ class TestRoute < MiniTest::Unit::TestCase
     end
     
     it 'has to compute an array of locations (clockwise bbox)' do
-      @rm.strategy = :clockwise_in_bbox
-      locations = @rm.compute
+      strategy = :clockwise_in_bbox
+      locations = @rm.compute(:strategy => strategy)
       locations.must_be_instance_of Array
       locations.size.must_be :>, 1
       locations.first.must_be_instance_of Location

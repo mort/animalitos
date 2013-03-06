@@ -9,7 +9,7 @@ require 'rufus/mnemo'
 require 'cartodb-rb-client'
 
 require 'rgeo'
-#require 'geocoder'
+require 'geocoder'
 require 'geokit'
 
 require 'httparty'

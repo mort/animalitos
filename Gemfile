@@ -16,3 +16,4 @@ gem "geokit", "~> 1.6.5"
 gem "rgeo", "~> 0.3.20"
 
 gem 'minitest-spec-context'
+gem "m", "~> 1.3.1"

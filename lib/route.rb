@@ -23,8 +23,10 @@ class Route
 
     raise 'Unknown strategy' unless STRATEGIES.include?(strategy.to_sym)
 
-    @locations = send("compute_#{strategy}", options)
+    @locations = [@start_location]
+    @locations.concat send("compute_#{strategy}", options)
     @locations << @end_location if @end_location
+    
     @locations
   end
 
