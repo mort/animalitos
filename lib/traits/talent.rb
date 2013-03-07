@@ -1,0 +1,2 @@
+module Talent
+end

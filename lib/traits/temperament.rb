@@ -36,7 +36,7 @@ module Temperament
     # Shall we reconsider?
     volatile_p = rand
     
-    return @likings[thing] if (@likings.has_key?(thing) && (volatile_p > @temperament[:volatile]))
+    return @likings[thing] if (@likings.has_key?(thing) && (volatile_p < @temperament[:volatile]))
 
     p_like = rand
     p_dislike = rand
@@ -86,4 +86,11 @@ module Temperament
   
   end
   
+  def enjoy_animalito(animalito)
+    return false if animalito === self
+    enjoy(animalito.to_url)
+  end
+  
+
+
 end
