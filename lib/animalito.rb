@@ -3,9 +3,10 @@ class Animalito
   include Movable
   include Temperament
   include Feeder
+  include Talent
 
   attr_reader :player, :name, :paths, :bumps, :journeys,  :id, :temperament, :luma, :luma_values
-  attr_accessor :leashed
+  attr_accessor :leashed, :scuffles
 
   def initialize
     @positions = []
@@ -19,6 +20,8 @@ class Animalito
 
     @temperament = set_temperament
     @likings = {}
+    
+    @scuffles = {:won => [], :lost => []}
 
     @joy = 100
     @luma = 100
@@ -117,6 +120,10 @@ class Animalito
       :id => to_param,
       :display_name => @name
     )
+  end
+  
+  def to_uri
+    "http://littlesiblings.com/s/#{animalito.id}"
   end
   
 
