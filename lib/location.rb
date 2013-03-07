@@ -97,7 +97,7 @@ class Location
     return unless occupant.is_a?(Animalito)
 
     @occupants << occupant 
-    Bump.new(occupants).crash if (@occupants.size > 1)
+    Bump.new(occupants, self).crash if (@occupants.size > 1)
     notify_observers(self, "#{to_param} has a new visitor #{occupant.to_param}", :new_occupant)		
   end
   
