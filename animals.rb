@@ -13,7 +13,7 @@ require 'geocoder'
 require 'geokit'
 
 require 'httparty'
-require 'activitystreams'
+require 'streams'
 
 require 'observer'
 require 'securerandom'

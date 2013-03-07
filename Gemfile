@@ -9,7 +9,7 @@ gem "rufus-mnemo", "~> 1.2.3"
 gem "cartodb-rb-client", "~> 0.4.3"
 gem "httparty", "~> 0.10.2"
 
-gem "activitystreams", "~> 0.0.4"
+gem "streams", "~> 0.1.2"
 
 gem "pry", "~> 0.9.12"
 
