@@ -82,7 +82,7 @@ class Location
     @geohash = GeoHash.encode(@lat,@lon)
     @occupants = []
 
-    add_observer Announcer.new
+    add_observer Streamer.new
 		
   end
   
@@ -98,7 +98,6 @@ class Location
 
     @occupants << occupant 
     Bump.new(occupants, self).crash if (@occupants.size > 1)
-    notify_observers(self, "#{to_param} has a new visitor #{occupant.to_param}", :new_occupant)		
   end
   
   def remove_occupant(occupant)
@@ -109,15 +108,26 @@ class Location
     geohash
   end
   
-  def as_place
-    ActivityStreams::Object::Place.new(
-      :display_name => formatted_address,
-      :position => ActivityStreams::Object::Place::GeoLocation.new(
-        :latitude => @lat,
-        :longitude => @lon,
-        :altitude => 100
-      )
-    )
+  def to_iri
+    "http://littlesiblings.com/iris/#{self.to_param}"
+  end
+  
+  def as_obj
+    
+    lat = @lat
+    lon = @lon
+    #fa = formatted_address
+    alt = altitude
+    iri = to_iri
+    
+    place {
+      position  {
+        latitude  lat
+        longitude lon
+        altitude  alt
+      }
+      id iri
+    }    
   end
   
   

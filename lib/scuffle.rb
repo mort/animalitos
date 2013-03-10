@@ -1,23 +1,27 @@
 class Scuffle 
   include Observable 
   
+  attr_reader :a1, :a2, :tie, :over, :winner, :loser, :created_at, :location
+  
   def initialize(participants, location) 
     
+    @id = SecureRandom.uuid
     @participants = participants
     @a1,@a2 = *@participants
-    @tie = @over = false
-    @winner = @loser = nil
+    @tie = false
+    @over = false
+    @winner = nil
+    @loser = nil
     @created_at = Time.now
     @location = location
 
-    add_observer Announcer.new
-    
+    add_observer Streamer.new
     
   end
   
-  def play
+  def play    
     
-    case (@a1.lumma <=> @a2.lumma)
+    case (@a1.luma <=> @a2.luma)
       when 1
         won_by(@a1)
       when -1
@@ -25,6 +29,9 @@ class Scuffle
       when 0
         tie
     end
+    
+    (@tie == true) ? 'tie' : @winner
+    # puts "Tie 2 #{tie}"
   end
   
   def won_by(a)
@@ -38,31 +45,50 @@ class Scuffle
   end
   
   def tie
-    @tie = @over = true
+    @tie = true 
+    @over = true
   end
   
-  def as_activity(v)
+  def as_activity(participant)
     
-    return false unless %w(win lose).includes(v)
+    return false unless (@over && @participants.include?(participant))
     
-    actor = (v == 'win' ? @winner : @loser).as_actor
-    object = self.as_object
+    the_object = self.as_obj
+    the_actor = participant.as_actor
+    the_location = @location.as_place
+    verb = @tie ? 'tie' : (participant == @winner) ? 'win' : 'lose'
     
-    verb = "ActivityStreams::Verb::#{v.capitalize}".constantize.new  
-
-    
-    activity = ActivityStreams::Activity.new(
-      :actor  => actor,
-      :object => object,
-      :verb   => verb,
-      :published => Time.now.utc,
-      :location => @location.as_place
-    )
-      
+    activity {
+      verb  verb
+      actor the_actor
+      obj the_object   
+      self[:location] = the_location
+    }
+            
   end
   
-  def as_object
+  def as_obj
     
+    #place = @location.as_place
+    name = "#{@a1.name} vs #{@a2.name}"
+    the_id = to_param
+    
+    game { 
+      display_name name
+      id the_id
+    }
+  end
+  
+  def is_a_tie?
+    @tie
+  end
+  
+  def to_param
+    @id
+  end
+  
+  def to_iri
+    "http://littlesiblings.com/iris/#{self.to_param}"
   end
   
   

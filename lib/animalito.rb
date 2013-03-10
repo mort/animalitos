@@ -5,9 +5,9 @@ class Animalito
   include Feeder
   include Talent
 
-  attr_reader :player, :name, :paths, :bumps, :journeys,  :id, :temperament, :luma, :luma_values
+  attr_reader :bond, :name, :paths, :bumps, :journeys, :scores, :id, :temperament, :bound, :created_at
   attr_accessor :leashed, :scuffles
-
+  
   def initialize
     @positions = []
     @id = SecureRandom.uuid
@@ -17,36 +17,40 @@ class Animalito
     @journeys = []
     @leashed = nil
     @created_at = Time.now
+    @bond = nil
+    @bound = false
 
     @temperament = set_temperament
     @likings = {}
     
     @scuffles = {:won => [], :lost => []}
 
-    @joy = 100
-    @luma = 100
+    @scores = {:joy => Score.new(100, 0, Temperament::JOY_LIMIT), :luma => Score.new(100, 0, Feeder::LUMA_LIMIT)}
     
-    @luma_values= {}
-    
-
-    add_observer Announcer.new
+    add_observer Streamer.new
 
     changed
 
-    notify_observers(self, "#{to_param} is born!", :birth)
+    notify_observers(self.as_activity)
 
   end
+  
+  def player
+    return false unless @bound
+    @bond.player
+  end
 
-  def bond_with(player)
+  def share_bond(bond)
 
-    @player = player
+    @bond = bond
+    @bound = true
     @leashed = true
 
     # Animalito should follow its player
     #follow(@player)
 
     changed
-    notify_observers(self, "#{to_param} is now bonded with #{player.to_param}", :bond)
+    notify_observers(@bond.as_activity('animalito'))
 
     player
 
@@ -108,7 +112,7 @@ class Animalito
 
 
   def to_param
-    id
+    @id
   end
   
   def tick
@@ -116,17 +120,30 @@ class Animalito
   end
   
   def as_actor
-    ActivityStreams::Object::Person.new(
-      :id => to_param,
-      :display_name => @name
-    )
+    name = @name
+    iri = to_iri
+    
+    person {
+      display_name name
+      id iri
+    }
   end
   
-  def to_uri
-    "http://littlesiblings.com/s/#{animalito.id}"
+  def as_activity
+    
+    a = self.as_actor
+    
+    activity {
+      verb 'born'
+      actor a
+    }
   end
   
-
+  def to_iri
+    "http://littlesiblings.com/iris/#{self.to_param}"
+  end
+  
+  
   private
 
   def set_pace(loc, last_loc, speed)

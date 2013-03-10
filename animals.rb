@@ -14,11 +14,13 @@ require 'geokit'
 
 require 'httparty'
 require 'streams'
+require 'cocaine'
 
 require 'observer'
 require 'securerandom'
 
-
+include ActivityStreams
+include Observable
 
 Dir[File.dirname(__FILE__) + '/lib/traits/*.rb'].each {|file| require file }
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file }

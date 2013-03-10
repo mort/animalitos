@@ -2,36 +2,61 @@ module Feeder
   
   LUMA_LIMIT = 500
   
+  def luma 
+    scores[:luma].value
+  end
+    
   def feed_on_img(img)
     
-    
-    @luma_values[img] ||= Luma.new(img).to_i 
-    
-    increment = @luma_values[img]
-
-    puts "Current luma of #{name}: #{@luma}"
-    puts "Lumic value of #{img}: #{increment}"
-    
-    puts "No luma! #{img} is useless now." if increment < 1
-    
-    return false if (increment < 1 || @luma >= LUMA_LIMIT)
-    
-    new_luma = @luma + increment
-    @luma = (new_luma < LUMA_LIMIT) ? new_luma : LUMA_LIMIT
+    feeding = Feeding.new(self, img)
+    scores[:luma].change_by(feeding.feed)
     
     changed
 
-    puts s = "Fed! Luma of #{name} is now #{@luma}"
-    notify_observers(self, s, :feed)
+    notify_observers feeding.as_activity
     
-    @luma_values[img] = increment / 2
-
-    @luma
+    feeding
     
   end
   
   def consume_luma(i = 1)
-    @luma = (@luma > i) ? @luma - i : 0
+    scores[:luma].change_by(i*-1)
   end
     
+end
+
+
+class Feeding
+
+  def initialize(animalito, img)
+    @animalito = animalito
+    @img = img
+    @luma_value = nil
+  end
+  
+  def feed
+    @luma_value ||= Luma.new(@img).to_i 
+    increment = @luma_value
+    
+    @luma_value = @luma_value / 2
+    
+    increment
+  end
+
+  def as_activity
+  
+    the_actor = @animalito.as_actor
+    the_url = "http://littlesiblings.com/api/feedings/#{@image}"
+        
+    activity {
+      verb 'feed'
+      actor the_actor
+      obj image {
+        url the_url
+      }
+    }
+    
+    
+  end
+
 end

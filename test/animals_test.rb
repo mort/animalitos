@@ -27,7 +27,7 @@ class TestPlayer < MiniTest::Unit::TestCase
     end
     
     
-    it 'has to bond the animalito with self when bonding' do
+    it 'has to share the bond the animalito when bonding' do
       a = Animalito.new
       @player.bond_with(a)
       a.player.must_be_same_as @player
@@ -72,7 +72,7 @@ class TestAnimalito < MiniTest::Unit::TestCase
     
     it 'has to bond with players' do
       p = Player.new('mort')
-      @animalito.bond_with(p)
+      p.bond_with(@animalito)
       @animalito.player.must_be_same_as p
     end
     
@@ -136,6 +136,10 @@ class TestAnimalito < MiniTest::Unit::TestCase
                   
     end
     
+    context 'temperament' do
+      
+    end
+  
   
   end
   
@@ -299,5 +303,119 @@ class TestJourney < MiniTest::Unit::TestCase
     
   end
 
+
+end
+
+class TestScuffle < MiniTest::Unit::TestCase 
+
+  describe Scuffle do
+    
+      before do
+        @a1 = Animalito.new
+        @a2 = Animalito.new
+        @l  = Location.new(0.0, 0.0)
+        @s = Scuffle.new([@a1,@a2], @l)
+      end
+      
+      it 'should be a scuffle' do
+        @s.must_be_instance_of Scuffle
+      end
+      
+      it 'shouldnt be over (til its over)' do
+        @s.over.must_equal false
+      end
+      
+      it 'should have participants' do
+        [@s.a1, @s.a2].must_equal [@a1, @a2]
+      end
+      
+      it 'should have a location' do
+       @s.location.must_equal @l
+      end
+      
+      it 'should end in a tie for animalitos with the same luma' do
+        @s.play
+        @s.is_a_tie?.must_equal true
+        @s.winner.must_equal nil
+        @s.loser.must_equal nil
+        @s.over.must_equal true
+      end
+       
+    end
+  
+  describe Scuffle, 'win' do
+
+     before do
+       @a1 = Animalito.new
+       @a2 = Animalito.new
+       # Less luma
+       @a2.tick
+       @l  = Location.new(0.0, 0.0)
+       @s = Scuffle.new([@a1,@a2], @l)
+       @s.play
+     end
+
+     it 'should end in a win for the animalito with more luma' do
+       @s.is_a_tie?.must_equal false
+       @s.winner.must_equal @a1
+       @s.loser.must_equal @a2
+       @s.over.must_equal true
+     end
+     
+     it 'should add to the animalitos scuffles list' do
+       @a1.scuffles[:lost].size.must_equal 0
+       @a2.scuffles[:lost].size.must_equal 1
+       
+       @a1.scuffles[:won].size.must_equal 1
+       @a2.scuffles[:won].size.must_equal 0
+       
+       @a1.scuffles[:won].first.must_equal @s
+       @a2.scuffles[:lost].first.must_equal @s
+     end
+
+   end
+
+
+end
+
+
+class TestScore < MiniTest::Unit::TestCase 
+
+  describe Score do
+  
+    before do 
+      @value = 100
+      @min = 50
+      @max = 200
+      @s = Score.new(@value, @min, @max)
+    end
+    
+    it 'must be a Score' do
+      @s.must_be_instance_of Score
+    end
+    
+    it 'must keep an array of values, initialized' do
+      @s.values.must_be_instance_of Array
+      @s.values.count.must_equal 1
+      @s.values.last.must_equal @value
+    end
+    
+    it 'must change' do
+      @s.change_by(25)
+      @s.values.count.must_equal 2
+      @s.value.must_equal 125
+    end
+    
+    it 'must never be less than the set min value' do
+      @s.change_by(-1000)
+      @s.value.must_equal @min
+    end
+    
+    it 'must never be more than the set max value' do
+      @s.change_by(1000)
+      @s.value.must_equal @max
+    end
+    
+  end
 
 end

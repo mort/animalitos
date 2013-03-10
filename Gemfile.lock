@@ -10,14 +10,7 @@ GEM
     activesupport (3.2.12)
       i18n (~> 0.6)
       multi_json (~> 1.0)
-    activitystreams (0.0.4)
-      activesupport (>= 2.3)
-      addressable
-      attr_required (>= 0.0.5)
-      i18n
-      json (>= 1.4.3)
     addressable (2.3.3)
-    attr_required (0.0.5)
     cartodb-rb-client (0.4.3)
       activesupport (>= 3.0.0)
       i18n (>= 0.5.0, <= 0.6.0)
@@ -28,6 +21,10 @@ GEM
       rgeo (>= 0.3.2)
       rgeo-geojson (>= 0.2.1)
       typhoeus (= 0.3.3)
+    climate_control (0.0.3)
+      activesupport (>= 3.0)
+    cocaine (0.5.1)
+      climate_control (>= 0.0.3, < 1.0)
     coderay (1.0.9)
     csquares (0.1.0)
     geocoder (1.1.6)
@@ -67,8 +64,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activitystreams (~> 0.0.4)
+  addressable (~> 2.3.3)
   cartodb-rb-client (~> 0.4.3)
+  cocaine (~> 0.5.1)
   csquares (~> 0.1.0)
   geocoder (~> 1.1.6)
   geohash!

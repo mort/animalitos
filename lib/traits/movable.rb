@@ -18,9 +18,14 @@ module Movable
   end
 
   def enter_location(location, options = {})
-    positions << Position.new(location, self, options)
+    
+    pos = Position.new(location, self, options)
+
+    positions << pos
+
     changed
-    notify_observers(self, "#{to_param} is now at #{location.lat}, #{location.lon}", :enter_location)
+    
+    notify_observers pos.as_activity
 
     location
   end
@@ -28,6 +33,8 @@ module Movable
   def leave_current_location
     current_location.remove_occupant(self)
   end
+  
 
+  
 
 end

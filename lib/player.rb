@@ -2,34 +2,41 @@ class Player
   include Observable
   include Movable
 
-	attr_accessor :animalito, :name
+	attr_reader :name, :bond, :positions, :bound
 
 	def initialize(name)
+
+    @id = SecureRandom.uuid
 		@name = name
-		@animalito = nil
+		@bond = nil
 		@positions = []
     @bound = false
 
-		add_observer Announcer.new
+		add_observer Streamer.new
 	end
+
+  def animalito
+    return false unless @bound
+    @bond.animalito 
+  end
 
 	def hatch
 	  return if @bound
-        bond_with(Animalito.new)
-      end
+    bond_with(Animalito.new)
+  end
 
 	def bond_with(animalito)
 	  raise 'Already bonded' if @bound
 
-		@animalito = animalito
-		@animalito.bond_with(self)
+    @bond = Bond.new(self, animalito)
+		@animalito.share_bond(@bond)
 		@bound = true
 
 		# Player should follow its animalito
     #follow(@animalito)
 
 		changed
-		notify_observers self, "#{to_param} is now bonded with #{animalito.to_param}", :bond
+		notify_observers @bond.as_activity('player')
 
 		animalito
 	end
@@ -52,7 +59,11 @@ class Player
   end
 
 	def to_param
-    name
+    @id
   end
+  
+  def to_iri
+    "http://littlesiblings.com/iris/#{self.to_param}"
+  end  
 
 end

@@ -3,6 +3,10 @@ module Temperament
   JOY_LIMIT = 500
   TIME_BETWEEN_WEATHER_CHECKS = 300
   
+  def joy 
+    @scores[:joy].value
+  end
+
   def set_temperament
     # TODO: Use something from the player as seed
     prng = Random.new(@created_at.to_i)
@@ -12,24 +16,17 @@ module Temperament
     
     {:like => prng.rand , :dislike => prng.rand, :volatile => prng.rand(0.3)}
     
-    
-    
   end
   
   def enjoy(uri, points = 10)
 
     increment = consider(uri) * points
-    
-    new_joy = @joy + increment
-    
-    @joy = (new_joy < JOY_LIMIT) ? (new_joy > 0 ? new_joy : 0) : JOY_LIMIT
-    
-    puts "Joy of #{name} is now #{@joy}"
+    scores[:joy].change_by(increment)
     
   end
   
   def consider(uri)
-    puts 'Considering '+uri
+  #puts 'Considering '+uri
     # All things have an uri
     thing = uri
     
@@ -62,7 +59,7 @@ module Temperament
 
     loc ||= current_location
 
-    puts "You can plan a pretty picnic, but you can't predict the weather (#{loc})"
+  #puts "You can plan a pretty picnic, but you can't predict the weather (#{loc})"
 
     weather = Weather.new(loc)
 
@@ -88,7 +85,7 @@ module Temperament
   
   def enjoy_animalito(animalito)
     return false if animalito === self
-    enjoy(animalito.to_url)
+    enjoy(animalito.to_iri)
   end
   
 
