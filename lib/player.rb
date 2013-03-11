@@ -4,7 +4,7 @@ class Player
 
   include Streamable::Player
 
-	attr_reader :name, :bond, :positions, :bound
+	attr_reader :name, :bond, :positions, :bound, :inbox
 
 	def initialize(name)
 
@@ -13,9 +13,15 @@ class Player
 		@bond = nil
 		@positions = []
     @bound = false
-
+    
+    @inbox = Inbox.new(self)
+    
 		add_observer Streamer.new
 	end
+	
+	def notify(msg)
+    @inbox << msg
+  end
 
   def animalito
     return false unless @bound

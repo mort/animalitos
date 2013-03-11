@@ -156,6 +156,24 @@ class TestAnimalito < MiniTest::Unit::TestCase
       
     end
   
+    context 'feeds' do
+      
+      it 'should know the percentage of luma' do
+        @animalito.luma_percentage.must_equal 20
+      end
+      
+      it 'should notify the player if bound and on a warn level' do
+        p = Player.new('mort')
+        p.bond_with(@animalito)
+        @animalito.consume_luma(50)
+        p.inbox.count.must_equal 1
+        p.inbox.first[:type].must_equal :luma_level
+
+      end
+    
+    
+    end
+  
   
   end
   
