@@ -32,6 +32,8 @@ class Animalito
 
     @scores = {:joy => Score.new(100, 0, Enjoys::JOY_LIMIT), :luma => Score.new(100, 0, Feeds::LUMA_LIMIT)}
     
+    @inbox = []
+    
     add_observer Streamer.new
 
     changed
@@ -50,7 +52,8 @@ class Animalito
     @bond = bond
     @bound = true
     @leashed = true
-    move_to(player.current_location)
+    
+    move_to(player.current_location) if player.current_location
 
     # Animalito should follow its player
     #follow(@player)
