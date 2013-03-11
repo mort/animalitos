@@ -70,6 +70,8 @@ class Location
   include Geo
   include Geocoder
   
+  include Streamable::Animalito
+  
   attr_reader :lat, :lon, :altitude, :csquare, :geohash, :occupants
   
   def initialize(lat, lon, altitude = 100)
@@ -107,29 +109,6 @@ class Location
   def to_param 
     geohash
   end
-  
-  def to_iri
-    "http://littlesiblings.com/iris/#{self.to_param}"
-  end
-  
-  def as_obj
-    
-    lat = @lat
-    lon = @lon
-    #fa = formatted_address
-    alt = altitude
-    iri = to_iri
-    
-    place {
-      position  {
-        latitude  lat
-        longitude lon
-        altitude  alt
-      }
-      id iri
-    }    
-  end
-  
   
 end
 

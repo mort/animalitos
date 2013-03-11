@@ -1,6 +1,7 @@
 class Bump
   include Observable 
   
+  include Streamable::Bump
   
   def initialize(animalitos, location)
     @id = SecureRandom.uuid
@@ -23,8 +24,8 @@ class Bump
       a2 = c[1]
       
       # Let's get each sibling's opinion of the other
-      o1 = a1.consider(a2.to_iri)
-      o2 = a2.consider(a1.to_iri)
+      o1 = a1.enjoy_animalito(a2)
+      o2 = a2.enjoy_animalito(a1)
       
       # If they agree
       if o1 == o2 
@@ -39,12 +40,10 @@ class Bump
         if o1 == -1
           Scuffle.new([a1,a2], @location).play 
         else
-          notify_observers self.as_activity
+          notify_observers self.as_activity(a1, a2, o1) 
+          notify_observers self.as_activity(a2, a1, o1)           
         end
-        # If they don't like each other, a quarrel ensues. 7
-        #notify_observers(self, "#{bumpers} had a merry meeting!", :happy_encounter) if o1 == 1
-        #notify_observers(self, "#{bumpers} met without much fuss", :happy_encounter) if o1 == 0
-        
+
       end
       
        
@@ -53,12 +52,6 @@ class Bump
 
   end
   
-  def to_param
-    @id
-  end
   
-  def to_iri
-    "http://littlesiblings.com/iris/#{self.to_param}"
-  end
   
 end

@@ -1,14 +1,18 @@
 class Animalito
   include Observable
-  include Movable
-  include Temperament
-  include Feeder
+  include Moves
+  include Enjoys
+  include Feeds
   include Talent
+  
+  include Streamable::Animalito
+  
 
-  attr_reader :bond, :name, :paths, :bumps, :journeys, :scores, :id, :temperament, :bound, :created_at
+  attr_reader :bond, :name, :paths, :bumps, :journeys, :scores, :id, :temperament, :bound, :created_at, :birth_location
   attr_accessor :leashed, :scuffles
   
-  def initialize
+  def initialize(options = {})
+        
     @positions = []
     @id = SecureRandom.uuid
     @name = set_name
@@ -19,13 +23,14 @@ class Animalito
     @created_at = Time.now
     @bond = nil
     @bound = false
+    @birth_location = options.delete(:location)
 
-    @temperament = set_temperament
+    @temperament = Temperament.new
     @likings = {}
     
     @scuffles = {:won => [], :lost => []}
 
-    @scores = {:joy => Score.new(100, 0, Temperament::JOY_LIMIT), :luma => Score.new(100, 0, Feeder::LUMA_LIMIT)}
+    @scores = {:joy => Score.new(100, 0, Enjoys::JOY_LIMIT), :luma => Score.new(100, 0, Feeds::LUMA_LIMIT)}
     
     add_observer Streamer.new
 
@@ -45,12 +50,13 @@ class Animalito
     @bond = bond
     @bound = true
     @leashed = true
+    move_to(player.current_location)
 
     # Animalito should follow its player
     #follow(@player)
 
     changed
-    notify_observers(@bond.as_activity('animalito'))
+    #notify_observers(@bond.as_activity('animalito'))
 
     player
 
@@ -110,40 +116,10 @@ class Animalito
     @leashed = false
   end
 
-
-  def to_param
-    @id
-  end
-  
   def tick
     consume_luma
   end
-  
-  def as_actor
-    name = @name
-    iri = to_iri
-    
-    person {
-      display_name name
-      id iri
-    }
-  end
-  
-  def as_activity
-    
-    a = self.as_actor
-    
-    activity {
-      verb 'born'
-      actor a
-    }
-  end
-  
-  def to_iri
-    "http://littlesiblings.com/iris/#{self.to_param}"
-  end
-  
-  
+
   private
 
   def set_pace(loc, last_loc, speed)

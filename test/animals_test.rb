@@ -76,6 +76,22 @@ class TestAnimalito < MiniTest::Unit::TestCase
       @animalito.player.must_be_same_as p
     end
     
+    it 'has to have a birth location when hatched by a player' do
+      p = Player.new('mort')
+      l = Location.new(40.4091123, -3.6934069999999997)
+      p.move_to(l)
+      animalito = p.hatch
+      animalito.birth_location.must_be_same_as l
+    end
+    
+    it 'has to move to the players location after hatched' do
+      p = Player.new('mort')
+      l = Location.new(40.4091123, -3.6934069999999997)
+      p.move_to(l)
+      animalito = p.hatch
+      animalito.current_location.must_be_same_as p.current_location
+    end
+    
     it 'has to go with the player when leashed' do
       p = Player.new('mort')
       l =  Location.new(40.4091123, -3.6934069999999997)
@@ -85,7 +101,7 @@ class TestAnimalito < MiniTest::Unit::TestCase
       @animalito.current_location.must_be_same_as l
     end
     
-    context 'moving' do
+    context 'moves' do
       
       before do
         @l = Location.new(40.4091123, -3.6934069999999997)
@@ -136,7 +152,7 @@ class TestAnimalito < MiniTest::Unit::TestCase
                   
     end
     
-    context 'temperament' do
+    context 'enjoys' do
       
     end
   

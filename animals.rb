@@ -22,6 +22,8 @@ require 'securerandom'
 include ActivityStreams
 include Observable
 
+require File.dirname(__FILE__) + '/lib/streamable.rb'
+
 Dir[File.dirname(__FILE__) + '/lib/traits/*.rb'].each {|file| require file }
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file }
 

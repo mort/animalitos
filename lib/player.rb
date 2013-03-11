@@ -1,6 +1,8 @@
 class Player
   include Observable
-  include Movable
+  include Moves
+
+  include Streamable::Player
 
 	attr_reader :name, :bond, :positions, :bound
 
@@ -22,27 +24,27 @@ class Player
 
 	def hatch
 	  return if @bound
-    bond_with(Animalito.new)
+    bond_with(Animalito.new(:location => current_location))
   end
 
 	def bond_with(animalito)
 	  raise 'Already bonded' if @bound
 
     @bond = Bond.new(self, animalito)
-		@animalito.share_bond(@bond)
+		animalito.share_bond(@bond)
 		@bound = true
 
 		# Player should follow its animalito
     #follow(@animalito)
 
 		changed
-		notify_observers @bond.as_activity('player')
+		#notify_observers @bond.as_activity('player')
 
 		animalito
 	end
 
 	def unbond
-	  @animalito = nil
+	  @bond = nil
   end
 
   def checkin(venue)
@@ -55,15 +57,7 @@ class Player
 
 	def move_to(location, options = {:with_animalito => true})
 	  super
-	  @animalito.move_to(location, options) if @animalito && options[:with_animalito] && @animalito.leashed
+	  animalito.move_to(location, options) if animalito && options[:with_animalito] && animalito.leashed
   end
-
-	def to_param
-    @id
-  end
-  
-  def to_iri
-    "http://littlesiblings.com/iris/#{self.to_param}"
-  end  
 
 end
