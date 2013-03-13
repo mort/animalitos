@@ -53,7 +53,7 @@ class Animalito
     @bound = true
     @leashed = true
     
-    move_to(player.current_location) if player.current_location
+    action { move_to(player.current_location) } if player.current_location
 
     # Animalito should follow its player
     #follow(@player)
@@ -67,8 +67,8 @@ class Animalito
 
   def move_to(location, options = {})
     super
-    enjoy_venue(options[:venue]) if (options[:checkin] && options[:venue])
-    enjoy_weather if time_to_enjoy_the_weather_again?
+    action { enjoy_venue(options[:venue]) } if (options[:checkin] && options[:venue])
+    action { enjoy_weather } if time_to_enjoy_the_weather_again?
   end
 
   def wander(options = {})
@@ -83,6 +83,11 @@ class Animalito
     journey = Journey.new(self, locations)
     do_journey(journey, options[:journey])
 
+  end
+  
+  def action(&blk) 
+    raise "Sleeping" if sleeping?
+    yield
   end
 
   def last_journey

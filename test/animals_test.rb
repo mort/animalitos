@@ -170,6 +170,48 @@ class TestAnimalito < MiniTest::Unit::TestCase
         p.inbox.first[:type].must_equal :luma_level
 
       end
+            
+      it 'should go to sleep when luma is zero' do
+        @animalito.consume_luma(@animalito.luma)
+        @animalito.awake?.must_equal false
+        @animalito.sleeping?.must_equal true
+      end
+      
+      it 'wont wake up if luma is between zero and the minimum level' do
+        @animalito.consume_luma(@animalito.luma)
+        @animalito.add_luma(3)
+        @animalito.luma.must_equal 3
+        @animalito.awake?.must_equal false
+        @animalito.sleeping?.must_equal true
+      end
+      
+      it 'should consume luma' do
+        @animalito.consume_luma(@animalito.luma)
+        @animalito.luma.must_equal 0
+      end
+      
+      it 'should add luma' do
+        @animalito.consume_luma(@animalito.luma)
+        @animalito.add_luma(Feeds::LUMA_WARN_LEVELS.first)
+        @animalito.luma.must_equal Feeds::LUMA_WARN_LEVELS.first
+      end
+      
+      it 'should know when it has NOT enough luma' do
+        @animalito.consume_luma(@animalito.luma)
+        @animalito.enough_luma?.must_equal false
+      end
+      
+      it 'should know when it has enough luma' do
+        @animalito.consume_luma(@animalito.luma)
+        @animalito.add_luma(Feeds::LUMA_WARN_LEVELS.first)
+        @animalito.enough_luma?.must_equal true
+      end
+      
+      it 'should wake up when it has enough luma' do
+        @animalito.consume_luma(@animalito.luma)
+        @animalito.add_luma(Feeds::LUMA_WARN_LEVELS.first)
+        @animalito.awake?.must_equal true
+      end
     
     
     end
