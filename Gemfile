@@ -6,6 +6,8 @@ gem "csquares", "~> 0.1.0"
 gem "streams", "~> 0.1.2"
 gem "rufus-mnemo", "~> 1.2.3"
 
+gem "celluloid", "~> 0.12.4"
+
 gem "cartodb-rb-client", "~> 0.4.3"
 gem "httparty", "~> 0.10.2"
 
@@ -14,6 +16,7 @@ gem "streams", "~> 0.1.2"
 gem "cocaine", "~> 0.5.1"
 
 gem "pry", "~> 0.9.12"
+gem "quimby", "~> 0.4.5"
 
 gem "geocoder", "~> 1.1.6"
 gem "geokit", "~> 1.6.5"

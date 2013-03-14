@@ -30,7 +30,7 @@ class Inbox < Array
   end
   
   def valid_sender?(sender)
-    sender.is_a? Animalito || sender.is_a? Player
+    sender.is_a?(Animalito) || sender.is_a?(Player)
   end
 
 end

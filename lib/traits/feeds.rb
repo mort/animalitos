@@ -29,7 +29,7 @@ module Feeds
     scores[:luma].change_by(i*-1)
     go_to_sleep if awake? && no_luma? 
      
-    if @bound && LUMA_WARN_LEVELS.include?(luma_percentage)
+    if @bound && luma_warning?
       msg = Message[self, :luma_level, luma_percentage, Time.now]   
       player.notify(msg) 
     end
@@ -40,12 +40,16 @@ module Feeds
     ((luma.to_f/LUMA_LIMIT.to_f)*100).to_i
   end
   
+  def luma_warning?
+    LUMA_WARN_LEVELS.include?(luma_percentage)
+  end
+  
   def no_luma?
     luma == 0
   end
   
   def enough_luma?
-    luma >= LUMA_WARN_LEVELS.first
+    luma >= LUMA_WARN_LEVELS.sort.first
   end
   
   def go_to_sleep

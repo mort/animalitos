@@ -12,6 +12,8 @@ require 'rgeo'
 require 'geocoder'
 require 'geokit'
 
+require 'celluloid'
+
 require 'httparty'
 require 'streams'
 require 'cocaine'

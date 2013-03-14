@@ -72,9 +72,13 @@ class Location
   
   include Streamable::Animalito
   
-  attr_reader :lat, :lon, :altitude, :csquare, :geohash, :occupants
+  attr_reader :lat, :lon, :altitude, :csquare, :geohash, :occupants, :true_lat, :true_lon
   
   def initialize(lat, lon, altitude = 100)
+    
+    @true_lat = lat
+    @true_lon = lon
+    
     # Precision of 4 decimals ~= 11.1 meters
     # http://en.wikipedia.org/wiki/Decimal_degrees
     @lat = lat.precision

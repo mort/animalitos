@@ -34,7 +34,4 @@ module Moves
     current_location.remove_occupant(self)
   end
   
-
-  
-
 end

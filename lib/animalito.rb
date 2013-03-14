@@ -8,7 +8,7 @@ class Animalito
   include Streamable::Animalito
   
 
-  attr_reader :bond, :name, :paths, :bumps, :journeys, :scores, :id, :temperament, :bound, :created_at, :birth_location
+  attr_reader :bond, :name, :paths, :bumps, :journeys, :scores, :id, :temperament, :bound, :created_at, :birth_location, :likings
   attr_accessor :leashed, :scuffles
   
   def initialize(options = {})
