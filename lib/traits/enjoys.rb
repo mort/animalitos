@@ -38,7 +38,7 @@ module Enjoys
   
   def enjoy_venue(venue)
   
-    enjoy(venue.canonicalUrl, :venue)
+    enjoy(venue['canonicalUrl'], :venue)
   
   end
   

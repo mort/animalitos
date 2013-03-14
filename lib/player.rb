@@ -1,10 +1,14 @@
 class Player
+  include Celluloid
+  
   include Observable
   include Moves
+  
+  include Foursquare
 
   include Streamable::Player
 
-	attr_reader :name, :bond, :positions, :bound, :inbox
+	attr_reader :name, :bond, :positions, :bound, :inbox, :timer, :latest_venue_id
 
 	def initialize(name)
 
@@ -13,10 +17,14 @@ class Player
 		@bond = nil
 		@positions = []
     @bound = false
+    @latest_venue_id = nil
     
     @inbox = Inbox.new(self)
     
 		add_observer Streamer.new
+		
+		@timer = after(90) { checkin! }
+    
 	end
 	
 	def notify(msg)
@@ -24,7 +32,7 @@ class Player
   end
 
   def animalito
-    return false unless @bound
+    return nil unless @bound
     @bond.animalito 
   end
 
@@ -48,20 +56,34 @@ class Player
 
 		animalito
 	end
+	
 
 	def unbond
 	  @bond = nil
+	  @bound = false
+  end
+  
+  def checkin!
+    puts "Checking in ..."
+    checkin(latest_venue) unless @latest_venue_id == latest_venue['id']
+    @latest_venue_id = latest_venue['id']
+    @timer.reset
   end
 
   def checkin(venue)
 
-    lat = venue.location.lat
-    lon = venue.location.lng
+    lat = venue['location']['lat']
+    lon = venue['location']['lng']
+    loc = Location.new(lat,lon)
 
-    move_to(Location.new(lat,lon), {:checkin => true, :venue => venue})
+    move_to(loc, {:checkin => true, :venue => venue})
+
   end
 
-	def move_to(location, options = {:with_animalito => true})
+	def move_to(location, options)
+	  
+	  options[:with_animalito] ||= true
+	  
 	  super
 	  animalito.move_to(location, options) if animalito && options[:with_animalito] && animalito.leashed
   end
