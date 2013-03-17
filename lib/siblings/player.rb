@@ -11,6 +11,9 @@ module Siblings
     include Streamable::Player  
 
   	attr_reader :name, :bond, :positions, :bound, :inbox, :timer, :latest_venue_id
+  	
+  	delegate :animalito, :to => :bond, :allow_nil => true
+    
 
   	def initialize(name, autocheckin = false)
 
@@ -41,10 +44,10 @@ module Siblings
   	  animalito.move_to(location, options) if animalito && options[:with_animalito] && animalito.leashed
     end
 
-    def animalito
-      return nil unless @bound
-      @bond.animalito 
-    end
+    # def animalito
+    #   return nil unless @bound
+    #   @bond.animalito 
+    # end
 
   	def hatch
   	  return if @bound

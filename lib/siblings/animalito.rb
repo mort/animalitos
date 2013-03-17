@@ -14,6 +14,9 @@ module Siblings
     attr_reader :bond, :name, :paths, :bumps, :journeys, :scores, :id, :temperament, :bound, :created_at, :birth_location, :likings
     attr_accessor :leashed, :scuffles
   
+    delegate :player, :to => :bond, :allow_nil => true
+  
+  
     def initialize(options = {})
         
       @positions = []
@@ -45,10 +48,10 @@ module Siblings
 
     end
   
-    def player
-      return false unless @bound
-      @bond.player
-    end
+    # def player
+    #   return false unless @bound
+    #   @bond.player
+    # end
 
     def share_bond(bond)
 
@@ -57,8 +60,8 @@ module Siblings
       @leashed = true
     
       if player.current_location
-        action {
         
+        action {
            options = {}
        
            if player.current_position.venue
@@ -68,6 +71,7 @@ module Siblings
        
            move_to(player.current_location, options) 
         } 
+        
       end
 
       # Animalito should follow its player
