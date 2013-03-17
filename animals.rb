@@ -20,18 +20,19 @@ require 'cocaine'
 
 require 'observer'
 require 'securerandom'
-
-include ActivityStreams
-include Observable
+require 'csv'
 
 require File.dirname(__FILE__) + '/lib/streamable.rb'
-
+Dir[File.dirname(__FILE__) + '/lib/ext/*.rb'].each {|file| require file }
 Dir[File.dirname(__FILE__) + '/lib/traits/*.rb'].each {|file| require file }
+Dir[File.dirname(__FILE__) + '/lib/services/*.rb'].each {|file| require file }
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each {|file| require file }
 
 CartoDB::Init.start YAML.load_file(File.dirname(__FILE__)+'/config/cartodb.yml')
 
-
+include ActivityStreams
+include Observable
+include Siblings
 
 
 
