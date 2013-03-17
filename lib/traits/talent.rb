@@ -1,2 +1,1 @@
-module Talent
-end
+module Siblings; module Traits; module Talent; end end end

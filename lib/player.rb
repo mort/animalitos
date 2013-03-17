@@ -1,91 +1,77 @@
-class Player
-  include Celluloid
-  
-  include Observable
-  include Moves
-  
-  include Foursquare
+module Siblings
 
-  include Streamable::Player
-
-	attr_reader :name, :bond, :positions, :bound, :inbox, :timer, :latest_venue_id
-
-	def initialize(name)
-
-    @id = SecureRandom.uuid
-		@name = name
-		@bond = nil
-		@positions = []
-    @bound = false
-    @latest_venue_id = nil
+  class Player
     
-    @inbox = Inbox.new(self)
+    include Celluloid
+    include Observable
     
-		add_observer Streamer.new
+    include Traits::Moves
+    include Services::Foursquare
+
+    include Streamable::Player  
+
+  	attr_reader :name, :bond, :positions, :bound, :inbox, :timer, :latest_venue_id
+
+  	def initialize(name, autocheckin = false)
+
+      @id = SecureRandom.uuid
+  		@name = name
+  		@bond = nil
+  		@positions = []
+      @bound = false
+      @latest_venue_id = nil
+    
+      @inbox = Inbox.new(self)
+    
+  		add_observer Streamable::Streamer.new
 		
-		@timer = after(90) { checkin! }
+  		@timer = after(90) { checkin! } if autocheckin
     
-	end
+  	end
 	
-	def notify(msg)
-    @inbox << msg
-  end
+  	def notify(msg)
+      @inbox << msg
+    end
 
-  def animalito
-    return nil unless @bound
-    @bond.animalito 
-  end
+    def move_to(location, options = {})
+	  
+  	  options[:with_animalito] ||= true
+	  
+  	  super
+  	  animalito.move_to(location, options) if animalito && options[:with_animalito] && animalito.leashed
+    end
 
-	def hatch
-	  return if @bound
-    bond_with(Animalito.new(:location => current_location))
-  end
+    def animalito
+      return nil unless @bound
+      @bond.animalito 
+    end
 
-	def bond_with(animalito)
-	  raise 'Already bonded' if @bound
+  	def hatch
+  	  return if @bound
+      bond_with(::Animalito.new(:location => current_location))
+    end
 
-    @bond = Bond.new(self, animalito)
-		animalito.share_bond(@bond)
-		@bound = true
+  	def bond_with(animalito)
+  	  raise 'Already bonded' if @bound
 
-		# Player should follow its animalito
-    #follow(@animalito)
+      @bond = Bond.new(self, animalito)
+  		animalito.share_bond(@bond)
+  		@bound = true
 
-		changed
-		#notify_observers @bond.as_activity('player')
+  		# Player should follow its animalito
+      #follow(@animalito)
 
-		animalito
-	end
+  		changed
+  		#notify_observers @bond.as_activity('player')
+
+  		animalito
+  	end
 	
-
-	def unbond
-	  @bond = nil
-	  @bound = false
-  end
+  	def unbond
+  	  @bond = nil
+  	  @bound = false
+    end
   
-  def checkin!
-    puts "Checking in ..."
-    checkin(latest_venue) unless @latest_venue_id == latest_venue['id']
-    @latest_venue_id = latest_venue['id']
-    @timer.reset
-  end
-
-  def checkin(venue)
-
-    lat = venue['location']['lat']
-    lon = venue['location']['lng']
-    loc = Location.new(lat,lon)
-
-    move_to(loc, {:checkin => true, :venue => venue})
-
-  end
-
-	def move_to(location, options)
-	  
-	  options[:with_animalito] ||= true
-	  
-	  super
-	  animalito.move_to(location, options) if animalito && options[:with_animalito] && animalito.leashed
   end
 
 end
