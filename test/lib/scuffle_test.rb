@@ -1,4 +1,4 @@
-require './test_helper.rb'
+require '../test_helper.rb'
 
 class TestScuffle < MiniTest::Unit::TestCase 
 

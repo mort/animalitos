@@ -1,4 +1,4 @@
- require '../animals.rb'
+ require '../siblings.rb'
 
 
 p = Player.new('mort')

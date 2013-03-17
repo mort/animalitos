@@ -1,3 +1,4 @@
+require '../test_helper.rb'
 
 class TestScore < MiniTest::Unit::TestCase 
 

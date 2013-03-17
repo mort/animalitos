@@ -27,7 +27,7 @@ module Siblings
 
         changed
     
-        notify_observers pos.as_activity if self.class == Animalito
+        notify_observers pos.as_activity if self.is_a?(Animalito)
 
         location
       end

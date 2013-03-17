@@ -15,7 +15,7 @@ module Siblings
   	delegate :animalito, :to => :bond, :allow_nil => true
     
 
-  	def initialize(name, autocheckin = false)
+  	def initialize(name, options = {})
 
       @id = SecureRandom.uuid
   		@name = name
@@ -28,7 +28,7 @@ module Siblings
     
   		add_observer Streamable::Streamer.new
 		
-  		@timer = after(90) { checkin! } if autocheckin
+  		@timer = after(90) { checkin! } if options[:autocheckin]
     
   	end
 	
@@ -42,12 +42,8 @@ module Siblings
 	  
   	  super
   	  animalito.move_to(location, options) if animalito && options[:with_animalito] && animalito.leashed
+  	  current_position
     end
-
-    # def animalito
-    #   return nil unless @bound
-    #   @bond.animalito 
-    # end
 
   	def hatch
   	  return if @bound

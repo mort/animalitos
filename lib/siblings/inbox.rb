@@ -32,7 +32,7 @@ module Siblings
     end
   
     def valid_sender?(sender)
-      sender.is_a?(Animalito) || sender.is_a?(Player)
+      [Animalito, Sender].include? sender.class
     end
 
   end

@@ -1,4 +1,5 @@
 module Siblings
+  
   module Streamable
 
     class Streamer
@@ -16,6 +17,8 @@ module Siblings
           channels_for(activity, 'feed').each do |c|
             $redis.zadd(c, Time.now.to_i, activity)
           end
+          
+          fanout(activity)
       
       end
   
@@ -41,6 +44,15 @@ module Siblings
         channels
     
       end
+
+      def fanout(activity) 
+        # Updates followers' timelines
+        # actor.followers
+        # location.followers
+        # object.followers
+        # target.followers
+      end
+      
 
     end
   end

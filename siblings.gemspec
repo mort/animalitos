@@ -1,30 +1,42 @@
-require File.expand_path("../lib/siblings/version", __FILE__)
+# -*- encoding: utf-8 -*-
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'siblings/version'
 
-Gem::Specification.new do |s|
-  s.name        = 'Siblings'
-  s.version     = Siblings::VERSION
-  s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Manuel González Noriega"]
-  s.email       = ['manuel.gonzalez.noriega@gmail.com']
-  s.homepage    = "http://littlesiblings.com"
-  s.summary     = "Siblings"
-  s.description = "Little siblings"
+Gem::Specification.new do |gem|
+  gem.name          = "siblings"
+  gem.version       = Siblings::VERSION
+  gem.authors       = ["Manuel González Noriega"]
+  gem.email         = ["manuel.gonzalez.noriega@gmail.com"]
+  gem.description   = ""
+  gem.summary       = ""
+  gem.homepage      = ""
 
-  s.required_rubygems_version = ">= 1.3.6"
+  gem.files         = `git ls-files`.split($/)
+  #gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
+  gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
+  gem.require_paths = ["lib"]
+  
+  gem.add_development_dependency "turn", "~> 0.9.6"
+  gem.add_development_dependency "pry", "~> 0.9.12"
+  gem.add_development_dependency "minitest", "~> 4.6.2"
+  gem.add_development_dependency "minitest-spec-context", "~> 0.0.3"
+  gem.add_development_dependency "m", "~> 1.3.1"
 
-  # lol - required for validation
-  s.rubyforge_project         = "siblings"
+  gem.add_dependency "redis", "~> 3.0.2"
+  gem.add_dependency "csquares", "~> 0.1.0"
+  gem.add_dependency "streams", "~> 0.1.2"
+  gem.add_dependency "rufus-mnemo", "~> 1.2.3"
+  gem.add_dependency "celluloid", "~> 0.12.4"
+  gem.add_dependency "cartodb-rb-client", "~> 0.4.3"
+  gem.add_dependency "httparty", "~> 0.10.2"
+  gem.add_dependency "addressable", "~> 2.3.3"
+  gem.add_dependency "streams", "~> 0.1.2"
+  gem.add_dependency "cocaine", "~> 0.5.1"
+  gem.add_dependency "pry", "~> 0.9.12"
+  gem.add_dependency "quimby", "~> 0.4.5"
+  gem.add_dependency "geocoder", "~> 1.1.6"
+  gem.add_dependency "geokit", "~> 1.6.5"
+  gem.add_dependency "rgeo", "~> 0.3.20"
 
-  # If you have other dependencies, add them here
-  # s.add_dependency "another", "~> 1.2"
-
-  # If you need to check in files that aren't .rb files, add them here
-  s.files        = Dir["{lib}/**/*.rb", "*.md"]
-  s.require_path = 'lib'
-
-  # If you need an executable, add it here
-  # s.executables = ["newgem"]
-
-  # If you have C extensions, uncomment this line
-  # s.extensions = "ext/extconf.rb"
 end

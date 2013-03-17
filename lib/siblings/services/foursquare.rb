@@ -5,7 +5,7 @@ module Siblings
       AUTH_TOKEN = 'YEROB0YJD5X0AS1QY2FUKWVNMIAHBWPM425SIVODKHT1UHQE'
       ENDPOINT = 'https://api.foursquare.com/v2'
   
-      def checkins(limit = 5)
+      def checkins(limit = 1)
         r = HTTParty.get checkins_url
         r['response']['checkins']['items']
       end
@@ -26,21 +26,27 @@ module Siblings
         latest_checkin['venue']
       end
   
-      def checkin!
-        checkin(latest_venue) unless @latest_venue_id == latest_venue['id']
-        @latest_venue_id = latest_venue['id']
-        @timer.reset
-      end
-
       def checkin(venue)
 
         lat = venue['location']['lat']
         lon = venue['location']['lng']
         loc = Location.new(lat,lon)
 
+        @latest_venue_id = venue['id']
+        
         move_to(loc, {:checkin => true, :venue => venue})
-
+        
       end
+  
+      def checkin!
+        checkin(latest_venue) if (latest_venue && change_of_venue?(latest_venue['id']))
+        @timer.reset if @timer
+      end
+      
+      def change_of_venue?(new_venue_id)
+        @latest_venue_id.nil? || (@latest_venue_id != new_venue_id)
+      end
+  
   
       private
   

@@ -1,5 +1,4 @@
-require './test_helper.rb'
-require './test_helper.rb'
+require '../test_helper.rb'
 
 class TestJourney < MiniTest::Unit::TestCase 
   
