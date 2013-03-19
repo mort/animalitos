@@ -18,7 +18,8 @@ module Siblings
             $redis.zadd(c, Time.now.to_i, activity)
           end
           
-          fanout(activity)
+          Siblings.logger.info(activity)
+          #fanout(activity)
       
       end
   
@@ -27,6 +28,8 @@ module Siblings
         c = "animalitos"
     
         activity = act.to_s
+        
+        Siblings.logger.debug(activity)
             
         actor_id = JSON.parse(activity)['actor']['id'].split(':')[2]
         verb = JSON.parse(activity)['verb']

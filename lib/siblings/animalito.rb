@@ -40,7 +40,7 @@ module Siblings
     
       @inbox = []
     
-      add_observer ::Streamable::Streamer.new
+      add_observer Streamable::Streamer.new
 
       changed
 
@@ -48,18 +48,13 @@ module Siblings
 
     end
   
-    # def player
-    #   return false unless @bound
-    #   @bond.player
-    # end
-
     def share_bond(bond)
 
       @bond = bond
       @bound = true
       @leashed = true
     
-      if player.current_location
+      if player.current_location 
         
         action {
            options = {}
@@ -69,6 +64,7 @@ module Siblings
             options[:venue] = player.current_position.venue
            end
        
+           Siblings.logger.debug 'First checkin'
            move_to(player.current_location, options) 
         } 
         
@@ -76,9 +72,6 @@ module Siblings
 
       # Animalito should follow its player
       #follow(@player)
-
-      changed
-      #notify_observers(@bond.as_activity('animalito'))
 
       player
 
@@ -145,6 +138,10 @@ module Siblings
 
     def tick
       consume_luma
+    end
+    
+    def to_param
+      @id
     end
 
     private

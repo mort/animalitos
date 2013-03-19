@@ -46,7 +46,7 @@ module Siblings
   
       def enjoy_animalito(animalito)
         return false if animalito === self
-        enjoy(animalito.to_iri, :animalito)
+        enjoy(Siblings::Streamable.to_iri(animalito), :animalito)
       end
   
 

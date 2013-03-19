@@ -2,14 +2,17 @@ module Siblings
 
   class Feeding
 
+    include Streamable::Feeding
+
     def initialize(animalito, img)
       @animalito = animalito
-      @img = img
+      @img = Image.new(img)
       @luma_value = nil
+      @id = SecureRandom.uuid
     end
   
     def feed
-      @luma_value ||= Luma.new(@img).to_i 
+      @luma_value ||= Luma.new(@img.src).to_i 
       increment = @luma_value
     
       @luma_value = @luma_value / 2
@@ -17,21 +20,11 @@ module Siblings
       increment
     end
 
-    def as_activity
-  
-      the_actor = @animalito.as_actor
-      the_url = "http://littlesiblings.com/api/feedings/#{@image}"
-        
-      activity {
-        verb 'feed'
-        actor the_actor
-        obj image {
-          url the_url
-        }
-      }
-    
-    
+
+    def to_param
+      @id
     end
+
 
   end
 

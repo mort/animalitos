@@ -18,8 +18,7 @@ class TestPlayer < MiniTest::Unit::TestCase
       @player.animalito.must_be_same_as a
     end
     
-    
-    it 'has to share the bond the Animalito when bonding' do
+    it 'has to share the bond the animalito when bonding' do
       a = Animalito.new
       @player.bond_with(a)
       a.player.to_param.must_be_same_as @player.to_param

@@ -27,6 +27,8 @@ module Siblings
 
         changed
     
+        Siblings.logger.info pos.as_activity
+    		
         notify_observers pos.as_activity if self.is_a?(Animalito)
 
         location

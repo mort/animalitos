@@ -75,25 +75,25 @@ module Siblings
   
     attr_reader :lat, :lon, :altitude, :csquare, :geohash, :occupants, :true_lat, :true_lon
   
-    def initialize(lat, lon, altitude = 100)
+    def initialize(lat, lon, altitude = 100, precision = 4)
     
       @true_lat = lat
       @true_lon = lon
+      
+      @precision = precision
     
       # Precision of 4 decimals ~= 11.1 meters
       # http://en.wikipedia.org/wiki/Decimal_degrees
-      @lat = lat.precision(4)
-      @lon = lon.precision(4)
+      @lat = lat.precision(@precision)
+      @lon = lon.precision(@precision)
       @altitude = altitude
       @csquare = CSquare.new(@lat,@lon)
-      @geohash = GeoHash.encode(@lat,@lon)
+      @geohash = GeoHash.encode(@lat,@lon, @precision)
       @occupants = []
 
       add_observer Streamable::Streamer.new
 		
     end
-  
-  
   
     def add_occupant(occupant)
     

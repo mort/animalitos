@@ -10,11 +10,13 @@ class Array
 
     top
 
-  end
+  end unless method_defined?(:upperleft)
 
   def sort_clockwise!
+  
     upper = self.upperleft
     sort! { |a,b| a.send('<=>', b, upper) }
-  end
+  
+  end unless method_defined?(:sort_clockwise!)
 
 end

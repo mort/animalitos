@@ -6,12 +6,19 @@ module Siblings
       ENDPOINT = 'https://api.foursquare.com/v2'
   
       def checkins(limit = 1)
-        r = HTTParty.get checkins_url
+        r = HTTParty.get checkins_url(limit)
         r['response']['checkins']['items']
       end
   
-      def search(lat, lon, limit = nil, intent = nil) 
-        r = HTTParty.get search_url(lat, lon, limit, intent)
+      def venue_search(lat = nil, lon = nil, limit = 10, intent = 'checkin') 
+
+        if current_location
+          lat ||= current_location.lat 
+          lon ||= current_location.lon 
+        end
+        
+        raise "Invalid venue search" if (lat.nil? || lon.nil?)
+        r = HTTParty.get venue_search_url(lat, lon, limit, intent)
       end
   
       def nearby(limit = nil, intent = nil)
@@ -49,14 +56,18 @@ module Siblings
   
   
       private
-  
-      def search_url(lat,lon, limit = 10, intent = 'checkin')
-        ll = "#{lat},#{lon}"
-        "#{ENDPOINT}/venues/search?ll=#{ll}&limit=#{limit}&intent=#{intent}"
+      
+      def v
+        Time.now.strftime('%Y%m%d')
       end
   
-      def checkins_url(limit = 5)
-        "#{ENDPOINT}/users/self/checkins?limit=#{limit}&oauth_token=#{AUTH_TOKEN}"
+      def venue_search_url(lat, lon, limit = 10, intent = 'checkin')
+        ll = "#{lat},#{lon}"
+        "#{ENDPOINT}/venues/search?v=#{v}&ll=#{ll}&limit=#{limit}&intent=#{intent}&oauth_token=#{AUTH_TOKEN}"
+      end
+  
+      def checkins_url(limit)
+        "#{ENDPOINT}/users/self/checkins?v=#{v}&limit=#{limit}&oauth_token=#{AUTH_TOKEN}"
       end
   
     end

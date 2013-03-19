@@ -13,6 +13,7 @@ require 'cocaine'
 require 'observer'
 require 'securerandom'
 require 'csv'
+require 'logger'
 
 #CartoDB::Init.start YAML.load_file File.expand_path('/../config/cartodb.yml', __FILE__)
 
@@ -34,12 +35,16 @@ module Siblings
   autoload :Temperament, 'siblings/temperament'
 
   module Streamable
+    
     autoload :Streamer,    'siblings/streamer'
     autoload :Animalito,   'siblings/streamable'
     autoload :Scuffle,     'siblings/streamable'
     autoload :Location,    'siblings/streamable'
     autoload :Player,      'siblings/streamable'
     autoload :Bump,        'siblings/streamable'
+    autoload :Position,    'siblings/streamable'
+    autoload :Feeding,     'siblings/streamable'
+    
   end
   
   module Services
@@ -59,6 +64,14 @@ module Siblings
   include ActivityStreams
   
 end
+
+module Siblings
+  class <<self
+    attr_accessor :logger
+  end
+end
+
+Siblings.logger = Logger.new('/tmp/siblings.log')
 
 require 'siblings/version'
 require 'siblings/ext/array'
