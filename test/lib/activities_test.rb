@@ -45,27 +45,125 @@ class TestActivities < MiniTest::Unit::TestCase
     
     end
   
-    context 'with you' do
+    context 'moving with player' do
     
       before do
         @a = Animalito.new
         @p = Player.new 'mort'
         @p.bond_with(@a)
-        @p.move_to(Location.new(0.0,0.0))
-        @pos = @p.current_position
-        @act = JSON.parse(@pos.as_activity.dump.to_s)
+        @p.move_to(Location.new(40.425829799999995, -3.7112119000000003))
+        @pos = @a.current_position
+        @act = JSON.parse(@pos.as_activity.dup.to_s)
       end
       
       it 'should be a valid activity' do
-        assert valid?(@act), @act.to_s 
+        valid?(@act)
       end
       
+      it 'the animalito should be the actor' do
+        @act['actor']['displayName'].must_equal @a.name
+      end
+      
+      it 'should have the right verb' do
+        assert verb_is?(@act, 'at')
+      end
+      
+      it 'should have an object' do
+        assert activity_has?(@act, 'object')
+        assert is_absolute_iri?(@act['object']['id'])
+      end
+      
+      it 'should have a natural language description' do
+        @act['content'].must_match /is at/
+      end
+      
+      it 'should have the name of the player on the content' do
+        s = 
+        @act['content'].must_match /with/
+      end
+  
+    end
     
+    context 'moving on its own' do
+    
+      before do
+        @a = Animalito.new
+        @p = Player.new 'mort'
+        @p.bond_with(@a)
+        @a.unleash
+        @a.move_to(Location.new(40.425829799999995, -3.7112119000000003))
+        @pos = @a.current_position
+        @act = JSON.parse(@pos.as_activity.dup.to_s)
+      end
+      
+      it 'should be a valid activity' do
+        valid?(@act)
+      end
+      
+      it 'the animalito should be the actor' do
+        @act['actor']['displayName'].must_equal @a.name
+      end
+      
+      it 'should have the right verb' do
+        assert verb_is?(@act, 'at')
+      end
+      
+      it 'should have an object' do
+        assert activity_has?(@act, 'object')
+        assert is_absolute_iri?(@act['object']['id'])
+      end
+      
+      it 'should have a natural language description' do
+        @act['content'].must_match /is at/
+      end
+      
+      it 'wont have the name of the player on the content' do
+        @act['content'].wont_match /"#{@p.name}"/
+      end
+  
+    end
+    
+    context 'checkin in with the player' do
+      
+      before do
+        @a = Animalito.new
+        @p = Player.new 'mort'
+        @p.bond_with(@a)
+        @p.checkin(@p.latest_venue)
+        @pos = @a.current_position
+        @act = JSON.parse(@pos.as_activity.dup.to_s)
+      end
+      
+      it 'should have the right verb' do
+        assert verb_is?(@act, 'checkin')
+      end
+      
+      it 'should contain the name of the venue in the desc' do
+        @act['content'].must_match Regexp.new("#{@p.latest_venue['name']}")
+      end
+      
     end
   
-    def valid?(a) 
+    context 'starting a journey' do
+      
+      before do
+        @a = Animalito.new
+        @a.move_to(Location.new(40.425829799999995, -3.7112119000000003))
+      end
+ 
+      
+      
+    end
+  
+    def activity_has?(act, k)
+      act.keys.include? k
+    end
+  
+  
+    def valid?(a)       
       a.must_be_kind_of Hash
-      #assert is_absolute_iri?(a['id'])
+      assert is_absolute_iri?(a['id'])
+      assert is_absolute_iri?(a['actor']['id'])  
     end
     
     def verb_is?(a, v)
