@@ -38,10 +38,10 @@ module Siblings
 
     def move_to(location, options = {})
 	  
-  	  options[:with_animalito] ||= true
+  	  options[:leashed] ||= true
 	  
   	  super
-  	  animalito.move_to(location, options) if animalito && options[:with_animalito] && animalito.leashed
+  	  animalito.move_to(location, options) if animalito && options[:leashed] && animalito.leashed
   	  current_position
     end
 

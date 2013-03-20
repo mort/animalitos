@@ -44,6 +44,7 @@ module Siblings
     autoload :Bump,        'siblings/streamable'
     autoload :Position,    'siblings/streamable'
     autoload :Feeding,     'siblings/streamable'
+    autoload :Journey,     'siblings/streamable'
     
   end
   

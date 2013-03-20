@@ -149,9 +149,15 @@ class TestActivities < MiniTest::Unit::TestCase
       before do
         @a = Animalito.new
         @a.move_to(Location.new(40.425829799999995, -3.7112119000000003))
+        route = Route.new(@a.current_location)
+        locations = route.compute
+        journey = Journey.new(@a, locations)
+        @act = JSON.parse(journey.as_activity.dup.to_s)
       end
  
-      
+      it 'should have the right verb' do
+        assert verb_is?(@act, 'start-journey')
+      end
       
     end
   

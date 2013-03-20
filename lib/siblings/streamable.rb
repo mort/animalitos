@@ -143,6 +143,13 @@ module Siblings
         act   = @actor.as_actor
         place = self.as_obj
         v = @venue ? :checkin : :at
+        s = "#{@actor.name} is at #{self.to_s}"
+        
+        if leashed
+          other_name = @actor.is_a?(Siblings::Animalito) ? @actor.player.name : @actor.name
+          s << " with #{other_name}"
+        end
+
         
         activity {
           verb v
@@ -150,6 +157,7 @@ module Siblings
           obj place
           published Time.now.xmlschema
           id Streamable.activity_id
+          content s
         }
 
       end
@@ -226,6 +234,34 @@ module Siblings
       
     end
 
+    module Journey
+      
+      def as_activity
+        
+        v = @open ? 'start-journey' : 'end-journey'
+        
+        animalito = @animalito.as_actor
+        
+         activity {
+          verb v
+          obj self.as_obj
+          published Time.now.xmlschema
+         }
+      end
+      
+      def as_obj
+        
+         iri = Streamable.to_iri(self)
+        
+         object('journey') {
+           display_name "My Object Type"
+           id iri
+         }
+        
+      end
+      
+      
+    end
   
   end
 end

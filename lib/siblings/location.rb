@@ -18,7 +18,11 @@ module Siblings
       end
     
       def formatted_address
-        gaddress[0]['formatted_address']
+        begin
+          gaddress[0]['formatted_address']
+        rescue
+          "somewhere over the rainbow"
+        end
       end
     
   
