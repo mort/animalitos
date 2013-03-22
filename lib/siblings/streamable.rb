@@ -238,15 +238,24 @@ module Siblings
       
       def as_activity
         
+        return nil if @open.nil?
+        
+        animalito = @animalito.as_actor
         v = @open ? 'start-journey' : 'end-journey'
+        o = self.as_obj
+        c = @open ? 'started a walk' : 'finished a walk'
         
         animalito = @animalito.as_actor
         
          activity {
+          actor animalito
           verb v
-          obj self.as_obj
           published Time.now.xmlschema
+          id Streamable.activity_id
+          obj o
+          content c
          }
+         
       end
       
       def as_obj
@@ -254,7 +263,7 @@ module Siblings
          iri = Streamable.to_iri(self)
         
          object('journey') {
-           display_name "My Object Type"
+           display_name "Journey"
            id iri
          }
         

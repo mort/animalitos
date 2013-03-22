@@ -8,7 +8,9 @@ module Siblings
     def initialize(animalito, locations)
       @animalito = animalito
       @locations = locations
-      @created_at = @finished_at = @open = nil
+      @created_at = 
+      @finished_at = nil
+      @open = nil
       @id = SecureRandom.uuid
       
       add_observer Streamable::Streamer.new
@@ -23,6 +25,7 @@ module Siblings
       
       notify_observers(self.as_activity)
     
+      @open
     end
   
     def finish
@@ -31,6 +34,7 @@ module Siblings
       
       notify_observers(self.as_activity)
       
+      @open
     end
   
     def distance
