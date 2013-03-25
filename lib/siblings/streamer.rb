@@ -28,9 +28,7 @@ module Siblings
         c = "animalitos"
     
         activity = act.to_s
-        
-        Siblings.logger.debug(activity)
-            
+                    
         actor_id = JSON.parse(activity)['actor']['id'].split(':')[2]
         verb = JSON.parse(activity)['verb']
         object_id = JSON.parse(activity)['object']['id'].split(':')[2] if JSON.parse(activity)['object']

@@ -47,6 +47,8 @@ module Siblings
 
     module Animalito
     
+       CONTENT_STRINGS = {:born => 'is born'}
+    
        def as_actor
          name = @name
          iri = Streamable.to_iri(self)
@@ -61,21 +63,27 @@ module Siblings
          as_actor
        end
 
-       def as_activity
-
+       def as_activity(v = :born, loc = nil)
+         
          a = self.as_actor
-         p = @birth_location.as_obj if @birth_location 
-         s = "#{name} is born"
+         
+         p = if @birth_location and (v == :born)
+           @birth_location.as_obj 
+         elsif loc
+           loc.as_obj
+         end
+         
+         s = "#{name} #{CONTENT_STRINGS[v]}" if CONTENT_STRINGS.has_key? v
 
          activity {
            id Streamable.activity_id
-           verb 'born'
+           verb v.to_s
            actor a
-           self[:location] = p
+           self[:location] = p if p
            published Time.now.xmlschema
            content s  
-       
          }
+         
        end
 
     end
@@ -145,8 +153,8 @@ module Siblings
         v = @venue ? :checkin : :at
         s = "#{@actor.name} is at #{self.to_s}"
         
-        if leashed
-          other_name = @actor.is_a?(Siblings::Animalito) ? @actor.player.name : @actor.name
+        if @actor.bound? && @actor.leashed
+          other_name = @actor.significant_other.name
           s << " with #{other_name}"
         end
 
@@ -168,7 +176,7 @@ module Siblings
           lon = @location.lon
           alt = @location.altitude
           iri = Streamable.to_iri(self)
-          venue_name = @venue['name'] if @venue
+          venue_name = @venue.name if @venue
 
           place {
             position  {
@@ -243,7 +251,8 @@ module Siblings
         animalito = @animalito.as_actor
         v = @open ? 'start-journey' : 'end-journey'
         o = self.as_obj
-        c = @open ? 'started a walk' : 'finished a walk'
+        c = @animalito.name
+        c += @open ? ' has gone for a walk' : ' finished a walk'
         
         animalito = @animalito.as_actor
         
@@ -270,6 +279,68 @@ module Siblings
       end
       
       
+    end
+  
+    module Liking 
+    
+      def as_activity 
+        
+        animalito = @animalito.as_actor
+        o = @what.as_obj
+        v = (@sign == 1) ? 'likes' : 'dislikes'
+        
+        c = case @type 
+          when 'Siblings::Services::Venue'
+            "#{@animalito.name} #{v} being at #{@what.name}"
+          when 'Siblings::Services::Weather'
+            "The weather is #{@what['weather'].downcase} and #{@animalito.name} #{v} that."
+          end        
+          
+        activity {
+          actor animalito
+          verb v
+          published Time.now.xmlschema
+          id Streamable.activity_id
+          obj o
+          content c
+        }
+        
+      end
+    
+    end
+  
+    module Venue
+    
+      def as_obj
+        
+        name = self.name
+        lat = location['lat']
+        lon = location['lng']
+        
+        place {
+          position  {
+            latitude  lat
+            longitude lon
+          }
+          displayName name
+        }
+      end
+    
+    end
+  
+    module Weather
+   
+      def as_obj
+        
+        iri = Streamable.to_iri(self)
+
+         object('weather') {
+           display_name "Weather"
+           id iri
+         }
+        
+      end
+   
     end
   
   end

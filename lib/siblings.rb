@@ -33,10 +33,12 @@ module Siblings
   autoload :Score,       'siblings/score'
   autoload :Scuffle,     'siblings/scuffle'
   autoload :Temperament, 'siblings/temperament'
+  autoload :Liking,      'siblings/liking'
 
   module Streamable
     
     autoload :Streamer,    'siblings/streamer'
+    
     autoload :Animalito,   'siblings/streamable'
     autoload :Scuffle,     'siblings/streamable'
     autoload :Location,    'siblings/streamable'
@@ -45,12 +47,16 @@ module Siblings
     autoload :Position,    'siblings/streamable'
     autoload :Feeding,     'siblings/streamable'
     autoload :Journey,     'siblings/streamable'
+    autoload :Liking,      'siblings/streamable'
+    autoload :Venue,       'siblings/streamable'
     
   end
   
   module Services
     autoload :Foursquare, 'siblings/services/foursquare'
     autoload :Weather,    'siblings/services/weather'
+    autoload :Venue,      'siblings/services/venue'
+
   end
   
   module Traits 

@@ -22,7 +22,7 @@ module Siblings
     end
     
     def to_s
-      @venue ? @venue['name'] : @location.formatted_address
+      @venue ? @venue.name : @location.formatted_address
     end
     
     def to_param

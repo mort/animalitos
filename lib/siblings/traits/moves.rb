@@ -26,10 +26,8 @@ module Siblings
         positions << pos
 
         changed
-    
-        Siblings.logger.info pos.as_activity
-    		
-        notify_observers pos.as_activity if self.is_a?(Animalito)
+        		
+        notify_observers pos.as_activity if self.is_a?(Siblings::Animalito)
 
         location
       end

@@ -13,7 +13,13 @@ module Siblings
 
         increment = @temperament.consider(uri) * points
         scores[:joy].change_by(increment)
-    
+        
+        sign = (points > 0) ? 1 : -1
+        liking = Liking.new(self, what, sign)
+        notify_observers(liking.as_activity) 
+        
+        liking
+        
       end
   
 
@@ -26,7 +32,7 @@ module Siblings
         weather = Services::Weather.new(loc)
 
         @last_weather_check = Time.now.to_i
-        enjoy(weather['current_observation']['icon_url'], :weather) 
+        enjoy(weather['current_observation']['icon_url'], weather) 
     
       end
   
@@ -40,13 +46,13 @@ module Siblings
   
       def enjoy_venue(venue)
   
-        enjoy(venue['canonicalUrl'], :venue)
+        enjoy(venue.canonicalUrl, venue)
   
       end
   
       def enjoy_animalito(animalito)
         return false if animalito === self
-        enjoy(Siblings::Streamable.to_iri(animalito), :animalito)
+        enjoy(Siblings::Streamable.to_iri(animalito), animalito)
       end
   
 

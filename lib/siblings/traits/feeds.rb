@@ -31,7 +31,7 @@ module Siblings
         scores[:luma].change_by(i*-1)
         go_to_sleep if awake? && no_luma? 
      
-        if @bound && luma_warning?
+        if bound? && luma_warning?
           msg = Message[self, :luma_level, luma_percentage, Time.now]   
           player.notify(msg) 
         end

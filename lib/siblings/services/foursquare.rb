@@ -30,28 +30,28 @@ module Siblings
       end
   
       def latest_venue
-        latest_checkin['venue']
+        Services::Venue.new(latest_checkin['venue'])
       end
   
       def checkin(venue)
 
-        lat = venue['location']['lat']
-        lon = venue['location']['lng']
+        lat = venue.location['lat']
+        lon = venue.location['lng']
         loc = Location.new(lat,lon)
 
-        @latest_venue_id = venue['id']
+        @latest_venue_id = venue.id
         
         move_to(loc, {:checkin => true, :venue => venue})
         
       end
   
       def checkin!
-        checkin(latest_venue) if (latest_venue && change_of_venue?(latest_venue['id']))
+        checkin(latest_venue) if (latest_venue && change_of_venue?(latest_venue))
         @timer.reset if @timer
       end
       
-      def change_of_venue?(new_venue_id)
-        @latest_venue_id.nil? || (@latest_venue_id != new_venue_id)
+      def change_of_venue?(new_venue)
+        @latest_venue_id.nil? || (@latest_venue_id != new_venue.id)
       end
   
   

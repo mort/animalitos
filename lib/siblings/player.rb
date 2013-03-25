@@ -10,18 +10,16 @@ module Siblings
 
     include Streamable::Player  
 
-  	attr_reader :name, :bond, :positions, :bound, :inbox, :timer, :latest_venue_id, :following
+  	attr_reader :name, :bond, :positions, :inbox, :timer, :latest_venue_id, :following
   	
   	delegate :animalito, :to => :bond, :allow_nil => true
     
-
   	def initialize(name, options = {})
 
       @id = SecureRandom.uuid
   		@name = name
   		@bond = nil
   		@positions = []
-      @bound = false
       @latest_venue_id = nil
     
       @inbox = Inbox.new(self)
@@ -31,6 +29,15 @@ module Siblings
   		@timer = after(90) { checkin! } if options[:autocheckin]
   		    
   	end
+	
+	  def bound?
+      !@bond.nil?
+    end
+	
+	  def significant_other
+	    return nil unless bound?
+      animalito
+    end
 	
   	def notify(msg)
       @inbox << msg
@@ -46,7 +53,7 @@ module Siblings
     end
 
   	def hatch
-  	  return if @bound
+  	  return if bound?
       bond_with(Animalito.new(:location => current_location))
       
       changed
@@ -57,11 +64,10 @@ module Siblings
     end
 
   	def bond_with(animalito)
-  	  raise 'Already bonded' if @bound
+  	  raise 'Already bonded' if bound?
 
       @bond = Bond.new(self, animalito)
   		animalito.share_bond(@bond)
-  		@bound = true
 
   		# Player should follow its animalito
       #follow(@animalito)
@@ -74,9 +80,7 @@ module Siblings
 	
   	def unbond
   	  @bond = nil
-  	  @bound = false
     end
-  
   
     def follow(follower)
       @following ||= {}
@@ -91,8 +95,7 @@ module Siblings
       k = follower.class.to_s.downcase.split('::').last.to_sym
       @following[k].delete(follower.to_param)
     end
-    
-    
+        
     def to_param
       name
     end

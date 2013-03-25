@@ -5,12 +5,14 @@ class TestActivities < MiniTest::Unit::TestCase
   
   
   # Wadus is born
-  # Wadus is with you at [Venue]
+  # Wadus is with [Player] at [Venue]
+  # Wadus is now at [location]
+  # Wadus is with [Player] at [location]
+  # Wadus has gone for a walk
+  # Wadus has finished a walk
   # Wadus [likes] [VenueCategory]
   # Wadus [likes] being at [Venue]
-  # Wadus has gone for a walk
-  # Wadus is now at [location]
-  # The weather in [City] is [sunny] and Wadus [likes] that.
+  # The weather is [sunny] and Wadus [likes] that.
   # Wadus is hungry.
   # Wadus is hungry and feels tired.
   # Wadus is hungry and is about to go to sleep.
@@ -41,6 +43,10 @@ class TestActivities < MiniTest::Unit::TestCase
       
       it 'should have a natural language description' do
         @act['content'].must_match /is born/
+      end
+      
+      it 'should have the birth location' do
+        @act['location'].must_equal @a.birth_location
       end
     
     end
@@ -134,13 +140,17 @@ class TestActivities < MiniTest::Unit::TestCase
           @pos = @a.current_position
           @act = JSON.parse(@pos.as_activity.dup.to_s)
         end
+        
+        it 'should be a valid activity' do
+          assert valid?(@act) 
+        end
       
         it 'should have the right verb' do
           assert verb_is?(@act, 'checkin')
         end
       
         it 'should contain the name of the venue in the content' do
-          @act['content'].must_match Regexp.new("#{@p.latest_venue['name']}")
+          @act['content'].must_match Regexp.new("#{@p.latest_venue.name}")
         end
       
       end
@@ -169,7 +179,7 @@ class TestActivities < MiniTest::Unit::TestCase
       end
       
       it 'should have the right content' do
-         @act['content'].must_match /started a walk/
+         @act['content'].must_match /gone for a walk/
        end
        
        context 'finishing' do
@@ -201,14 +211,79 @@ class TestActivities < MiniTest::Unit::TestCase
       
       before do 
         @animalito = Animalito.new
+        @player = Player.new 'mort'
       end
       
-      it 'liking places' do
-        skip 'TODO'
+      context 'liking places' do
+        
+        before do 
+
+          @venue = @player.latest_venue
+          @liking = Liking.new(@animalito, @venue, 1)
+          @act = JSON.parse(@liking.as_activity.dup.to_s)
+          
+        end
+        
+        it 'should be a valid activity' do
+          assert valid?(@act)
+          assert verb_is?(@act, 'likes')
+        end
+        
+        
+       it 'should contain the right verb in the content' do
+           @act['content'].must_match /likes/
+         end
+        
+        it 'should contain the name of the venue in the content' do
+           @act['content'].must_match Regexp.new("#{@venue.name}")
+         end
+         
+         context 'disliking the place' do
+          
+          before do  
+           @liking = Liking.new(@animalito, @venue, -1)
+           @act = JSON.parse(@liking.as_activity.dup.to_s)
+          end
+          
+          it 'should be a valid activity' do
+            assert valid?(@act)
+            assert verb_is?(@act, 'dislikes')
+          end
+         
+          it 'should contain the right verb in the content' do
+            @act['content'].must_match /dislikes/
+          end
+         
+            
+         
+         end
+         
+        
       end
       
-      it 'liking the weather' do
-        skip 'TODO'
+      context 'liking the weather' do
+       
+         before do
+           @animalito = Animalito.new
+           @weather = Siblings::Services::Weather.new(Location.new(40.425829799999995, -3.7112119000000003))
+           @liking = Liking.new(@animalito, @weather, 1)
+           @act = JSON.parse(@liking.as_activity.dup.to_s)
+         end
+       
+       
+         it 'should be a valid activity' do
+           assert valid?(@act)
+           assert verb_is?(@act, 'likes')
+         end
+         
+         it 'should contain the right content' do
+            @act['content'].must_match /The weather is/
+            @act['content'].must_match Regexp.new @animalito.name
+            @act['content'].must_match /likes/
+         end
+     
+       
+       
       end
       
       it 'liking other animalitos' do
@@ -219,6 +294,7 @@ class TestActivities < MiniTest::Unit::TestCase
     end
    
     context 'energy' do
+      
     end
    
    
@@ -228,9 +304,9 @@ class TestActivities < MiniTest::Unit::TestCase
   
   
     def valid?(a)       
-      a.must_be_kind_of Hash
-      assert is_absolute_iri?(a['id'])
-      assert is_absolute_iri?(a['actor']['id'])  
+      a.must_be_kind_of Hash, @a.class.to_s
+      assert is_absolute_iri?(a['id']), a['id']
+      assert is_absolute_iri?(a['actor']['id']), a['actor']['id']  
     end
     
     def verb_is?(a, v)

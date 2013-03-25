@@ -11,11 +11,10 @@ module Siblings
   
     include Streamable::Animalito
     
-    attr_reader :bond, :name, :paths, :bumps, :journeys, :scores, :id, :temperament, :bound, :created_at, :birth_location, :likings
+    attr_reader :bond, :name, :paths, :bumps, :journeys, :scores, :id, :temperament, :created_at, :birth_location, :likings
     attr_accessor :leashed, :scuffles
   
     delegate :player, :to => :bond, :allow_nil => true
-  
   
     def initialize(options = {})
         
@@ -28,7 +27,6 @@ module Siblings
       @leashed = nil
       @created_at = Time.now
       @bond = nil
-      @bound = false
       @birth_location = options.delete(:location)
 
       @temperament = Temperament.new
@@ -47,11 +45,19 @@ module Siblings
       notify_observers(self.as_activity)
 
     end
+    
+    def bound?
+      !@bond.nil?
+    end
+    
+    def significant_other
+      return nil unless bound?
+      player
+    end
   
     def share_bond(bond)
 
       @bond = bond
-      @bound = true
       @leashed = true
     
       if player.current_location 
