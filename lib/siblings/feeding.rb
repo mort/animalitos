@@ -8,7 +8,7 @@ module Siblings
       @animalito = animalito
       @img = Image.new(img)
       @luma_value = nil
-      @id = SecureRandom.uuid
+      @uuid = SecureRandom.uuid
     end
   
     def feed
@@ -22,7 +22,7 @@ module Siblings
 
 
     def to_param
-      @id
+      @uuid
     end
 
 

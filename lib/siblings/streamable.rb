@@ -55,7 +55,7 @@ module Siblings
 
          person {
            display_name name
-           id iri
+           self[:id] = iri
          }
        end
 
@@ -76,7 +76,7 @@ module Siblings
          s = "#{name} #{CONTENT_STRINGS[v]}" if CONTENT_STRINGS.has_key? v
 
          activity {
-           id Streamable.activity_id
+           self[:id] = Streamable.activity_id
            verb v.to_s
            actor a
            self[:location] = p if p
@@ -104,7 +104,7 @@ module Siblings
             longitude lon
             altitude  alt
           }
-          id the_iri
+          self[:id] = the_iri
         }    
       end
     end
@@ -117,7 +117,7 @@ module Siblings
 
          person {
            display_name name
-           id iri
+           self[:id] = iri
          }
       end
     
@@ -138,7 +138,7 @@ module Siblings
           obj the_object   
           self[:location] = the_location
           published Time.now.xmlschema
-          id Streamable.activity_id
+          self[:id] = Streamable.activity_id
         }
       end
     
@@ -164,7 +164,7 @@ module Siblings
           actor act
           obj place
           published Time.now.xmlschema
-          id Streamable.activity_id
+          self[:id] = Streamable.activity_id
           content s
         }
 
@@ -185,7 +185,7 @@ module Siblings
               altitude  alt
             }
             self[:displayName] = venue_name if venue_name
-            id iri
+            self[:id] = iri
           }    
       end
         
@@ -206,7 +206,7 @@ module Siblings
           obj animalito
           self[:location] = the_location if the_location
           published Time.now.xmlschema
-          id Streamable.activity_id
+          self[:id] = Streamable.activity_id
         }
         
       end
@@ -223,7 +223,7 @@ module Siblings
           verb 'feed'
           actor animalito
           obj self.as_obj
-          id Streamable.activity_id
+          self[:id] = Streamable.activity_id
         }
 
       end
@@ -235,7 +235,7 @@ module Siblings
         
         image {
          url the_url
-         id the_iri
+         self[:id] = the_iri
        }
        
       end
@@ -260,7 +260,7 @@ module Siblings
           actor animalito
           verb v
           published Time.now.xmlschema
-          id Streamable.activity_id
+          self[:id] = Streamable.activity_id
           obj o
           content c
          }
@@ -273,7 +273,7 @@ module Siblings
         
          object('journey') {
            display_name "Journey"
-           id iri
+           self[:id] = iri
          }
         
       end
@@ -300,7 +300,7 @@ module Siblings
           actor animalito
           verb v
           published Time.now.xmlschema
-          id Streamable.activity_id
+          self[:id] = Streamable.activity_id
           obj o
           content c
         }
@@ -336,7 +336,7 @@ module Siblings
 
          object('weather') {
            display_name "Weather"
-           id iri
+           self[:id] = iri
          }
         
       end

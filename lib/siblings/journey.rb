@@ -1,17 +1,17 @@
 module Siblings
   class Journey
 
-    attr_reader :animalito, :locations, :created_at, :finished_at, :open, :id
+    attr_reader :animalito, :locations, :created_at, :finished_at, :open
     
     include Streamable::Journey
     
     def initialize(animalito, locations)
       @animalito = animalito
       @locations = locations
-      @created_at = 
+      @created_at = nil
       @finished_at = nil
       @open = nil
-      @id = SecureRandom.uuid
+      @uuid = SecureRandom.uuid
       
       add_observer Streamable::Streamer.new
       
@@ -48,7 +48,7 @@ module Siblings
     end
   
     def to_param
-      @id
+      @uuid
     end
 
   end

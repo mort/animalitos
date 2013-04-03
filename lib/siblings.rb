@@ -2,7 +2,7 @@ require 'geohash'
 require 'csquares'
 require "redis"
 require 'rufus/mnemo'
-require 'cartodb-rb-client'
+#require 'cartodb-rb-client'
 require 'rgeo'
 require 'geocoder'
 require 'geokit'
@@ -14,6 +14,8 @@ require 'observer'
 require 'securerandom'
 require 'csv'
 require 'logger'
+require 'edr'
+require 'active_record'
 
 #CartoDB::Init.start YAML.load_file File.expand_path('/../config/cartodb.yml', __FILE__)
 
@@ -67,9 +69,19 @@ module Siblings
     autoload :Talent, 'siblings/traits/talent'
   end
   
+  module Data
+    autoload :Animalito, 'siblings/data/animalito'
+    autoload :Location,  'siblings/data/location'
+    autoload :Position,  'siblings/data/position'
+    
+  end
+  
+  module Repositories
+    autoload :Animalito, 'siblings/repositories/animalito'
+  end
+  
   include Observable
   include ActivityStreams
-  
 end
 
 module Siblings
@@ -84,7 +96,25 @@ require 'siblings/version'
 require 'siblings/ext/array'
 require 'siblings/ext/float'
 
+
 include Siblings
+
+Edr::Registry.define do
+  
+  #%w(animalito position location).each do |c|
+  #  a =  ['siblings', c].map!{|s| s.capitalize}.join('::').constantize
+  #  b =  ['siblings', 'data', c].map!{|s| s.capitalize}.join('::').constantize
+   # map a, b
+  #end
+  map Siblings::Animalito, Siblings::Data::Animalito
+  map Siblings::Position,  Siblings::Data::Position
+  map Siblings::Location,  Siblings::Data::Location
+
+  
+end
+
+ActiveRecord::Base.establish_connection(:adapter => "mysql2",:host => "localhost",:database => "siblings_dev",:username => "root", :password => "")
+
 
 
 

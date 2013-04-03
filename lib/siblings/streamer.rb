@@ -28,6 +28,7 @@ module Siblings
         c = "animalitos"
     
         activity = act.to_s
+        puts activity
                     
         actor_id = JSON.parse(activity)['actor']['id'].split(':')[2]
         verb = JSON.parse(activity)['verb']

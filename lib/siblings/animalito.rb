@@ -1,5 +1,7 @@
 module Siblings
   
+  
+  # Animalitos are the main features. They are player avatars, and they can roam the landscape at will.  
   class Animalito
   
     include Observable
@@ -11,24 +13,41 @@ module Siblings
   
     include Streamable::Animalito
     
-    attr_reader :bond, :name, :paths, :bumps, :journeys, :scores, :id, :temperament, :created_at, :birth_location, :likings
-    attr_accessor :leashed, :scuffles
+    attr_reader :bond, :paths, :bumps, :journeys, :scores, :temperament, :created_at, :birth_location, :likings
+    attr_accessor :scuffles
   
-    delegate :player, :to => :bond, :allow_nil => true
+    include Edr::Model
+    
+    fields :id, :name, :created_at, :uuid, :leashed
+  
+    #delegate :player, :to => :bond, :allow_nil => true
+    delegate :player => :bond
+    
+    def self.make_name
+      i = Time.now.to_i
+      i = i*-1 if (i%2 > 0)
+      Rufus::Mnemo.from_integer(i)
+    end
   
     def initialize(options = {})
         
       @positions = []
-      @id = SecureRandom.uuid
-      @name = set_name
+      @uuid = SecureRandom.uuid
+      @name = self.class.make_name
       @bumps = []
       @paths = []
       @journeys = []
+      @bond = nil
       @leashed = nil
       @created_at = Time.now
-      @bond = nil
       @birth_location = options.delete(:location)
 
+      # Setting up data
+      name = @name
+      uuid = @uuid
+      leashed = nil
+      created_at = @created_at
+      
       @temperament = Temperament.new
       @likings = {}
     
@@ -43,6 +62,9 @@ module Siblings
       changed
 
       notify_observers(self.as_activity)
+      
+      # Initializa vals
+      _data.attribute_names.each {|at| a.send("#{at}=", a.instance_variable_get("@#{at}")) if a.instance_variable_defined?("@#{at}") }
 
     end
     
@@ -147,7 +169,7 @@ module Siblings
     end
     
     def to_param
-      @id
+      @uuid
     end
 
     private
@@ -159,11 +181,11 @@ module Siblings
       #p
     end
 
-    def set_name
-      i = Time.now.to_i
-      i = i*-1 if (i%2 > 0)
-      Rufus::Mnemo.from_integer(i)
-    end
+    # def set_name
+    #   i = Time.now.to_i
+    #   i = i*-1 if (i%2 > 0)
+    #   Rufus::Mnemo.from_integer(i)
+    # end
 
 
 

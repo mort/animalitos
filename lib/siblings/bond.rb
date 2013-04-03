@@ -1,4 +1,6 @@
 module Siblings
+
+  # The link without player and animalito
   class Bond
   
     attr_reader :player, :animalito, :created_at

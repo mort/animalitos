@@ -4,13 +4,13 @@ module Siblings
 
     STRATEGIES = [:linear, :random_in_bbox, :clockwise_in_bbox]
 
-    attr_reader :start_location, :end_location,  :id, :locations
+    attr_reader :start_location, :end_location, :locations
 
     def initialize(start_location, end_location = nil)
 
       raise 'Must supply a location' unless (start_location.is_a?(Location))
 
-      @id = SecureRandom.uuid
+      @uuid = SecureRandom.uuid
       @start_location = start_location
       @end_location = end_location
       @locations = nil

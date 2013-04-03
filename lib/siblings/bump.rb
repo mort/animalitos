@@ -1,5 +1,6 @@
 module Siblings
 
+  # When animalitos occipy the same location, they bump into each other.
   class Bump
     include Observable 
   

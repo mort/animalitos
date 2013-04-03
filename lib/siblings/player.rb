@@ -16,7 +16,7 @@ module Siblings
     
   	def initialize(name, options = {})
 
-      @id = SecureRandom.uuid
+      @uuid = SecureRandom.uuid
   		@name = name
   		@bond = nil
   		@positions = []
@@ -97,7 +97,7 @@ module Siblings
     end
         
     def to_param
-      name
+      @uuid
     end
   
   end

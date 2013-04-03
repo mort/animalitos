@@ -28,7 +28,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "streams", "~> 0.1.2"
   gem.add_dependency "rufus-mnemo", "~> 1.2.3"
   gem.add_dependency "celluloid", "~> 0.12.4"
-  gem.add_dependency "cartodb-rb-client", "~> 0.4.3"
+  #gem.add_dependency "cartodb-rb-client", "~> 0.4.3"
   gem.add_dependency "httparty", "~> 0.10.2"
   gem.add_dependency "addressable", "~> 2.3.3"
   gem.add_dependency "streams", "~> 0.1.2"
@@ -38,5 +38,10 @@ Gem::Specification.new do |gem|
   gem.add_dependency "geocoder", "~> 1.1.6"
   gem.add_dependency "geokit", "~> 1.6.5"
   gem.add_dependency "rgeo", "~> 0.3.20"
-
+  gem.add_dependency "edr", "~> 0.0.5"
+  gem.add_dependency "activerecord", "~> 3.2.13"
+  gem.add_dependency "mysql2", "~> 0.3.11"
+  gem.add_dependency "standalone_migrations", "~> 2.0.6"
+  gem.add_dependency "activesupport", "~> 3.2.13"
+  
 end
