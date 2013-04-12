@@ -32,22 +32,17 @@ module Siblings
     def initialize(options = {})
         
       @positions = []
-      @uuid = SecureRandom.uuid
-      @name = self.class.make_name
       @bumps = []
       @paths = []
       @journeys = []
       @bond = nil
-      @leashed = nil
-      @created_at = Time.now
-      @birth_location = options.delete(:location)
 
-      # Setting up data
-      name = @name
-      uuid = @uuid
+      uuid = SecureRandom.uuid
+      name = self.class.make_name
       leashed = nil
-      created_at = @created_at
-      
+      created_at = Time.now
+
+      @birth_location = options.delete(:location)      
       @temperament = Temperament.new
       @likings = {}
     
@@ -64,7 +59,7 @@ module Siblings
       notify_observers(self.as_activity)
       
       # Initializa vals
-      _data.attribute_names.each {|at| a.send("#{at}=", a.instance_variable_get("@#{at}")) if a.instance_variable_defined?("@#{at}") }
+      #_data.attribute_names.each {|at| a.send("#{at}=", a.instance_variable_get("@#{at}")) if a.instance_variable_defined?("@#{at}") }
 
     end
     
@@ -80,7 +75,7 @@ module Siblings
     def share_bond(bond)
 
       @bond = bond
-      @leashed = true
+      leashed = true
     
       if player.current_location 
         
@@ -121,7 +116,7 @@ module Siblings
       options[:route] ||= {}
       options[:journey] ||= {}
 
-      raise "Don't pull on the leash!" if @leashed
+      raise "Don't pull on the leash!" if leashed
 
       route = Route.new(current_location)
       locations = route.compute(options[:route])
@@ -161,7 +156,7 @@ module Siblings
     end
 
     def unleash
-      @leashed = false
+      leashed = false
     end
 
     def tick
@@ -169,7 +164,7 @@ module Siblings
     end
     
     def to_param
-      @uuid
+      uuid
     end
 
     private
